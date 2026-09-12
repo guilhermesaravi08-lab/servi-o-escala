@@ -1,410 +1,44 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escala ALI/BPMCHOQUE 2026</title>
-  <style>
-    :root {
-      --primary-color: #0f172a;
-      --accent-color: #2563eb;
-      --bg-glass: rgba(255, 255, 255, 0.90);
-      --bg-glass-card: rgba(255, 255, 255, 0.78);
-      --border-radius: 12px;
-      
-      /* Cores das Equipes */
-      --eq-a-bg: rgba(147, 197, 253, 0.55);
-      --eq-b-bg: rgba(254, 240, 138, 0.55);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-      margin: 0;
-      padding: 30px 15px 30px 180px; /* Espaço na esquerda para não cobrir a tabela */
-      min-height: 100vh;
-      color: #0f172a;
-      background-color: #0b0f19;
-    }
-
-    /* Brasão Fixo no Canto Superior Esquerdo */
-    .brasao-fixo {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      width: 140px;
-      height: 140px;
-      background: url('brasao.png') no-repeat center center;
-      background-size: contain;
-      z-index: 1000;
-      pointer-events: none;
-      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
-    }
-
-    .container {
-      max-width: 1250px;
-      margin: 0 auto;
-      background: var(--bg-glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 0;
-      margin-bottom: 5px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: #0f172a;
-      text-transform: uppercase;
-      font-size: 24px;
-    }
-
-    .save-status {
-      text-align: center;
-      font-size: 13px;
-      color: #059669;
-      font-weight: 600;
-      height: 20px;
-      margin-bottom: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .efetivo-section, .controls {
-      background: var(--bg-glass-card);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      padding: 18px 22px;
-      border-radius: var(--border-radius);
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-
-    .efetivo-section h3 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      font-size: 15px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #334155;
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .control-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    label {
-      font-weight: 600;
-      font-size: 14px;
-      color: #334155;
-    }
-
-    input, select, button {
-      padding: 10px 14px;
-      border: 1px solid rgba(203, 213, 225, 0.8);
-      border-radius: 8px;
-      font-size: 14px;
-      outline: none;
-      transition: all 0.2s ease;
-      background: rgba(255, 255, 255, 0.95);
-    }
-
-    input:focus, select:focus {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
-      background: #ffffff;
-    }
-
-    button {
-      background-color: var(--accent-color);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
-    }
-
-    button:hover {
-      background-color: #1d4ed8;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-    }
-
-    .btn-success {
-      background-color: #10b981;
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-    }
-    .btn-success:hover {
-      background-color: #059669;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    }
-
-    .militar-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .militar-tag {
-      background: #ffffff;
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid #e2e8f0;
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-    }
-
-    .militar-tag span {
-      color: #ef4444;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 50%;
-      width: 16px;
-      height: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .militar-tag span:hover {
-      background: #fee2e2;
-    }
-
-    .table-container {
-      overflow-x: auto;
-      border-radius: var(--border-radius);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(226, 232, 240, 0.8);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      background: rgba(255, 255, 255, 0.95);
-      text-align: center;
-    }
-
-    th, td {
-      border-bottom: 1px solid #e2e8f0;
-      border-right: 1px solid #e2e8f0;
-      padding: 6px;
-      font-size: 13px;
-      vertical-align: middle;
-    }
-
-    th:last-child, td:last-child {
-      border-right: none;
-    }
-
-    .header-mes {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
-      font-size: 18px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 14px;
-      border: none;
-    }
-
-    th {
-      background: #f8fafc;
-      color: #475569;
-      font-weight: 700;
-      padding: 10px 6px;
-    }
-
-    .row-even {
-      background-color: rgba(255, 255, 255, 0.9);
-    }
-
-    .row-odd {
-      background-color: rgba(248, 250, 252, 0.9);
-    }
-
-    tr:hover {
-      background-color: #f1f5f9;
-    }
-
-    .eq-a { background-color: var(--eq-a-bg); }
-    .eq-b { background-color: var(--eq-b-bg); }
-
-    .cell-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      padding: 2px;
-    }
-
-    td select, td input {
-      width: 100%;
-      border: 1px solid #cbd5e1;
-      background: rgba(255, 255, 255, 0.95);
-      text-align: center;
-      font-size: 12px;
-      padding: 5px;
-      border-radius: 6px;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
-    }
-
-    td select:focus, td input:focus {
-      background: #ffffff;
-    }
-
-    /* Responsividade para telas menores */
-    @media (max-width: 900px) {
-      body {
-        padding-left: 15px;
-      }
-      .brasao-fixo {
-        display: none; /* Oculta em telas pequenas para economizar espaço */
-      }
-    }
-
-    @media print {
-      body {
-        background: none !important;
-        padding: 0 !important;
-      }
-      .brasao-fixo {
-        display: none !important;
-      }
-      .container {
-        box-shadow: none;
-        padding: 0;
-        max-width: 100%;
-        background: white;
-        backdrop-filter: none;
-        border: none;
-      }
-      .controls, .efetivo-section, button, .save-status {
-        display: none !important;
-      }
-      table {
-        font-size: 11px;
-        border: 1px solid #000;
-      }
-      th, td {
-        border: 1px solid #000 !important;
-      }
-      select, input {
-        border: none !important;
-        appearance: none;
-        -webkit-appearance: none;
-        background: transparent !important;
-      }
-    }
-  </style>
-</head>
-<body>
-
-<!-- Elemento do Brasão Fixo -->
-<div class="brasao-fixo"></div>
-
-<div class="container">
-  <h1>Escala ALI/BPMCHOQUE 2026</h1>
-  <div class="save-status" id="saveStatus">☁️ Alterações salvas automaticamente</div>
-
-  <div class="efetivo-section">
-    <h3>Cadastro do Efetivo (Militares)</h3>
-    <div class="control-group">
-      <input type="text" id="novoMilitar" placeholder="Ex: Cb Silva, Sd Oliveira...">
-      <button onclick="adicionarMilitar()">+ Adicionar Militar</button>
-    </div>
-    <div class="militar-list" id="listaMilitares"></div>
-  </div>
-
-  <div class="controls">
-    <div class="control-group">
-      <label for="mes">Mês:</label>
-      <select id="mes" onchange="carregarEscala()">
-        <option value="0">Janeiro</option>
-        <option value="1">Fevereiro</option>
-        <option value="2">Março</option>
-        <option value="3">Abril</option>
-        <option value="4">Maio</option>
-        <option value="5">Junho</option>
-        <option value="6">Julho</option>
-        <option value="7">Agosto</option>
-        <option value="8">Setembro</option>
-        <option value="9" selected>Outubro</option>
-        <option value="10">Novembro</option>
-        <option value="11">Dezembro</option>
-      </select>
-
-      <label for="ano">Ano:</label>
-      <input type="number" id="ano" value="2026" style="width: 80px;" onchange="carregarEscala()">
-    </div>
-
-    <div class="control-group">
-      <button class="btn-success" onclick="preencherEscalaAutomática()">Auto-Preencher Plantão (24x72)</button>
-      <button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
-    </div>
-  </div>
-
-  <div class="table-container">
-    <table id="tabelaEscala">
-      <thead>
-        <tr>
-          <th colspan="6" class="header-mes" id="tituloMes">OUTUBRO 2026</th>
-        </tr>
-        <tr>
-          <th style="width: 45px;">OR</th>
-          <th style="width: 55px;">DIA</th>
-          <th style="width: 260px;">PLANTÃO (3 Militares)</th>
-          <th style="width: 260px;">EQ A (3 Militares)</th>
-          <th style="width: 260px;">EQ B (3 Militares)</th>
-          <th>OBS</th>
-        </tr>
-      </thead>
-      <tbody id="corpoTabela">
-      </tbody>
-    </table>
-  </div>
-</div>
+<!-- Carregamento do SDK do Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-  let efetivo = JSON.parse(localStorage.getItem('efetivoEscala')) || ['Cb Silva', 'Sd Oliveira', 'Sd Santos', 'Sd Costa'];
+  // 1. Cole aqui a configuração fornecida pelo seu painel do Firebase
+  const firebaseConfig = {
+    apiKey: "SUA_API_KEY_AQUI",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+    projectId: "SEU_PROJETO",
+    storageBucket: "SEU_PROJETO.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abcdef"
+  };
 
+  // Inicializa o Firebase
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  let efetivo = [];
   const diasSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
   const mesesNome = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
 
-  function notificarSalvamento() {
+  function notificarSalvamento(texto = '💾 Salvação concluída!') {
     const status = document.getElementById('saveStatus');
-    status.innerText = '💾 Salvação automática concluída!';
+    status.innerText = texto;
     setTimeout(() => {
-      status.innerText = '☁️ Alterações salvas automaticamente';
-    }, 1500);
+      status.innerText = '☁️ Conectado e sincronizado em tempo real';
+    }, 2000);
   }
 
-  function salvarEfetivo() {
-    localStorage.setItem('efetivoEscala', JSON.stringify(efetivo));
+  // --- GESTÃO DO EFETIVO NA NUVEM ---
+  database.ref('efetivo').on('value', (snapshot) => {
+    efetivo = snapshot.val() || ['Cb Silva', 'Sd Oliveira', 'Sd Santos', 'Sd Costa'];
     renderizarEfetivo();
     carregarEscala();
+  });
+
+  function salvarEfetivoNuvem() {
+    database.ref('efetivo').set(efetivo);
     notificarSalvamento();
   }
 
@@ -414,13 +48,13 @@
     if (nome) {
       efetivo.push(nome);
       input.value = '';
-      salvarEfetivo();
+      salvarEfetivoNuvem();
     }
   }
 
   function removerMilitar(index) {
     efetivo.splice(index, 1);
-    salvarEfetivo();
+    salvarEfetivoNuvem();
   }
 
   function renderizarEfetivo() {
@@ -448,9 +82,10 @@
   function getChaveMes() {
     const mes = document.getElementById('mes').value;
     const ano = document.getElementById('ano').value;
-    return `escala_v2_${ano}_${mes}`;
+    return `escala_${ano}_${mes}`;
   }
 
+  // --- SALVAMENTO E SINCRONIZAÇÃO DA ESCALA ---
   function salvarDadosTabela() {
     const chave = getChaveMes();
     const linhas = document.querySelectorAll('#corpoTabela tr');
@@ -477,8 +112,9 @@
       dadosEscala.push({ plantao, eqA, eqB, obs });
     });
 
-    localStorage.setItem(chave, JSON.stringify(dadosEscala));
-    notificarSalvamento();
+    // Envia os dados atualizados para a nuvem
+    database.ref('escalas/' + chave).set(dadosEscala);
+    notificarSalvamento('☁️ Alteração salva na nuvem!');
   }
 
   function carregarEscala() {
@@ -488,62 +124,57 @@
     document.getElementById('tituloMes').innerText = `${mesesNome[mes]} ${ano}`;
 
     const totalDias = new Date(ano, mes + 1, 0).getDate();
-    const corpo = document.getElementById('corpoTabela');
-    corpo.innerHTML = '';
-
     const chave = getChaveMes();
-    const dadosSalvos = JSON.parse(localStorage.getItem(chave)) || [];
 
-    for (let dia = 1; dia <= totalDias; dia++) {
-      const dataObj = new Date(ano, mes, dia);
-      const diaSemanaTexto = diasSemana[dataObj.getDay()];
-      const isEvenRow = dia % 2 === 0;
-      const rowClass = isEvenRow ? 'row-odd' : 'row-even';
+    // Escuta alterações em tempo real do mês selecionado
+    database.ref('escalas/' + chave).off(); // Remove ouvinte anterior
+    database.ref('escalas/' + chave).on('value', (snapshot) => {
+      const dadosSalvos = snapshot.val() || [];
+      const corpo = document.getElementById('corpoTabela');
+      corpo.innerHTML = '';
 
-      const diaSalvo = dadosSalvos[dia - 1] || { plantao: ['', '', ''], eqA: ['', '', ''], eqB: ['', '', ''], obs: '' };
+      for (let dia = 1; dia <= totalDias; dia++) {
+        const dataObj = new Date(ano, mes, dia);
+        const diaSemanaTexto = diasSemana[dataObj.getDay()];
+        const isEvenRow = dia % 2 === 0;
+        const rowClass = isEvenRow ? 'row-odd' : 'row-even';
+        const diaSalvo = dadosSalvos[dia - 1] || { plantao: ['', '', ''], eqA: ['', '', ''], eqB: ['', '', ''], obs: '' };
 
-      const tr = document.createElement('tr');
-      tr.className = rowClass;
+        const tr = document.createElement('tr');
+        tr.className = rowClass;
 
-      tr.innerHTML = `
-        <td><strong>${dia}.</strong></td>
-        <td><strong>${diaSemanaTexto}</strong></td>
-        
-        <!-- PLANTÃO -->
-        <td>
-          <div class="cell-group">
-            <select class="plantao-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao[0])}</select>
-            <select class="plantao-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao[1])}</select>
-            <select class="plantao-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao[2])}</select>
-          </div>
-        </td>
+        tr.innerHTML = `
+          <td><strong>${dia}.</strong></td>
+          <td><strong>${diaSemanaTexto}</strong></td>
+          <td>
+            <div class="cell-group">
+              <select class="plantao-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[0] : '')}</select>
+              <select class="plantao-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[1] : '')}</select>
+              <select class="plantao-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[2] : '')}</select>
+            </div>
+          </td>
+          <td class="eq-a">
+            <div class="cell-group">
+              <select class="eqa-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[0] : '')}</select>
+              <select class="eqa-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[1] : '')}</select>
+              <select class="eqa-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[2] : '')}</select>
+            </div>
+          </td>
+          <td class="eq-b">
+            <div class="cell-group">
+              <select class="eqb-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[0] : '')}</select>
+              <select class="eqb-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[1] : '')}</select>
+              <select class="eqb-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[2] : '')}</select>
+            </div>
+          </td>
+          <td>
+            <input type="text" class="input-obs" value="${diaSalvo.obs || ''}" placeholder="..." oninput="salvarDadosTabela()">
+          </td>
+        `;
 
-        <!-- EQUIPE A -->
-        <td class="eq-a">
-          <div class="cell-group">
-            <select class="eqa-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA[0])}</select>
-            <select class="eqa-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA[1])}</select>
-            <select class="eqa-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA[2])}</select>
-          </div>
-        </td>
-
-        <!-- EQUIPE B -->
-        <td class="eq-b">
-          <div class="cell-group">
-            <select class="eqb-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[0] : '')}</select>
-            <select class="eqb-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[1] : '')}</select>
-            <select class="eqb-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[2] : '')}</select>
-          </div>
-        </td>
-
-        <!-- OBSERVAÇÕES -->
-        <td>
-          <input type="text" class="input-obs" value="${diaSalvo.obs || ''}" placeholder="..." oninput="salvarDadosTabela()">
-        </td>
-      `;
-
-      corpo.appendChild(tr);
-    }
+        corpo.appendChild(tr);
+      }
+    });
   }
 
   function preencherEscalaAutomática() {
@@ -563,12 +194,4 @@
 
     salvarDadosTabela();
   }
-
-  window.onload = function() {
-    renderizarEfetivo();
-    carregarEscala();
-  };
 </script>
-
-</body>
-</html>
