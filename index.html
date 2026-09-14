@@ -21,7 +21,7 @@
       --status-licenca-premio: #7c3aed; /* Roxo */
       --status-dispensa: #475569;       /* Cinza */
 
-      /* Cores de Nível de Descanso */
+      /* Cores de Descanso (24x72) */
       --status-dia1: #ef4444;           /* Vermelho (1º dia folga) */
       --status-dia2: #eab308;           /* Amarelo (2º dia folga) */
       --status-dia3: #22c55e;           /* Verde (3º dia folga) */
@@ -156,6 +156,7 @@
       transition: all 0.3s ease;
     }
 
+    /* CARDS DE ESTATÍSTICAS DO MÊS */
     .stats-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -206,6 +207,7 @@
       color: #334155;
     }
 
+    /* GRIDS E CARDS DE STATUS */
     .status-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -238,12 +240,14 @@
       opacity: 0.95;
     }
 
+    /* Cores de Afastamentos / Situação Administrativa */
     .st-pronto { background-color: var(--status-pronto); color: #ffffff; }
     .st-licenca-medica { background-color: var(--status-licenca-medica); color: #ffffff; }
     .st-ferias { background-color: var(--status-ferias); color: #ffffff; }
     .st-licenca-premio { background-color: var(--status-licenca-premio); color: #ffffff; }
     .st-dispensa { background-color: var(--status-dispensa); color: #ffffff; }
 
+    /* Cores de Nível de Descanso */
     .st-dia1 { background-color: var(--status-dia1); color: #ffffff; }
     .st-dia2 { background-color: var(--status-dia2); color: #0f172a; }
     .st-dia3 { background-color: var(--status-dia3); color: #ffffff; }
@@ -408,6 +412,7 @@
     .row-even { background-color: rgba(255, 255, 255, 0.9); }
     .row-odd { background-color: rgba(248, 250, 252, 0.9); }
     
+    /* DESTAQUE DE FINAIS DE SEMANA */
     .row-fds { background-color: rgba(226, 232, 240, 0.65) !important; }
     .row-fds td:nth-child(2) { color: #dc2626; font-weight: 800; }
 
@@ -434,6 +439,7 @@
       transition: all 0.2s ease;
     }
 
+    /* FILTRO DE DESTAQUE DE MILITAR */
     .highlight-militar {
       background-color: #22c55e !important;
       color: #ffffff !important;
@@ -442,6 +448,7 @@
       box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
     }
 
+    /* ALERTA DE CONFLITO DE ESCALA */
     .conflito-alerta {
       background-color: #ef4444 !important;
       color: #ffffff !important;
@@ -531,23 +538,11 @@
       </div>
     </div>
 
-    <!-- CADASTRO DE EFETIVO COM ANTIGUIDADE -->
+    <!-- CADASTRO DE EFETIVO -->
     <div class="efetivo-section">
-      <h3>Cadastro do Efetivo (Com Antiguidade 10 a 01)</h3>
+      <h3>Cadastro do Efetivo (Militares)</h3>
       <div class="control-group">
-        <select id="novoMilitarAntiguidade" style="width: 80px;">
-          <option value="10">10</option>
-          <option value="09">09</option>
-          <option value="08">08</option>
-          <option value="07">07</option>
-          <option value="06">06</option>
-          <option value="05">05</option>
-          <option value="04">04</option>
-          <option value="03">03</option>
-          <option value="02">02</option>
-          <option value="01">01</option>
-        </select>
-        <input type="text" id="novoMilitarNome" placeholder="Ex: Cb Silva, Sd Oliveira..." style="flex-grow: 1;">
+        <input type="text" id="novoMilitar" placeholder="Ex: Cb Silva, Sd Oliveira...">
         <button onclick="adicionarMilitar()">+ Adicionar Militar</button>
       </div>
       <div class="militar-list" id="listaMilitares"></div>
@@ -573,10 +568,10 @@
       </div>
     </div>
 
-    <!-- 2. PAINEL DE NÍVEL DE DESCANSO (MILITARES PRONTOS DE 10,00 A 0,10) -->
+    <!-- 2. PAINEL DE NÍVEL DE DESCANSO (APENAS MILITARES PRONTOS) -->
     <div class="status-panel">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <h3>2. Nível de Descanso (Escala Decrescente 10,00 a 0,10)</h3>
+        <h3>2. Nível de Descanso (Apenas Militares PRONTOS)</h3>
         <div class="control-group" style="font-size: 12px;">
           <label for="diaConsulta" style="font-size: 12px;">Consulta p/ Dia do Mês:</label>
           <input type="number" id="diaConsulta" min="1" max="31" value="1" style="width: 65px; padding: 4px 8px;" onchange="atualizarStatusEfetivo()">
@@ -588,10 +583,10 @@
       </div>
 
       <div class="legenda-status">
-        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia3);"></div> 🟢 10,00 a 7,50 - Pronto / 100% Descansado</div>
-        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia2);"></div> 🟡 7,49 a 5,00 - Descanso Parcial (2º Dia Folga)</div>
-        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia1);"></div> 🔴 4,99 a 2,50 - Pouco Descansado (1º Dia Folga)</div>
-        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-servico);"></div> 🚨 2,49 a 0,10 - Em Serviço</div>
+        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-servico);"></div> 🚨 Em Serviço</div>
+        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia1);"></div> 🔴 1º Dia Folga (Não Descansado)</div>
+        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia2);"></div> 🟡 2º Dia Folga (Parcial)</div>
+        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia3);"></div> 🟢 3º Dia Folga (Pronto / 100% Descansado)</div>
       </div>
     </div>
 
@@ -684,8 +679,8 @@
   const database = firebase.database();
   const auth = firebase.auth();
 
-  let efetivo = []; // Estrutura: [{antiguidade: '10', nome: 'Felipe', rotulo: '10 - Felipe'}]
-  let statusEfetivoMap = {}; 
+  let efetivo = [];
+  let statusEfetivoMap = {}; // Armazena situação administrativa
   let dadosEscalaAtual = [];
 
   const diasSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
@@ -735,16 +730,8 @@
       atualizarStatusEfetivo();
     });
 
-    database.ref('efetivo_v2').on('value', (snapshot) => {
-      const dados = snapshot.val() || [
-        { antiguidade: '10', nome: 'Felipe', rotulo: '10 - Felipe' },
-        { antiguidade: '06', nome: 'Fernando', rotulo: '06 - Fernando' },
-        { antiguidade: '02', nome: 'Marcos', rotulo: '02 - Marcos' }
-      ];
-      
-      // Ordenação estrita de antiguidade decrescente (10 -> 01)
-      efetivo = dados.sort((a, b) => parseInt(b.antiguidade) - parseInt(a.antiguidade));
-      
+    database.ref('efetivo').on('value', (snapshot) => {
+      efetivo = snapshot.val() || ['Cb Silva', 'Sd Oliveira', 'Sd Santos', 'Sd Costa'];
       renderizarEfetivo();
       atualizarSelectFiltroMilitar();
       carregarEscala();
@@ -752,25 +739,16 @@
   }
 
   function salvarEfetivoNuvem() {
-    // Manter sempre ordenado do 10 ao 01
-    efetivo.sort((a, b) => parseInt(b.antiguidade) - parseInt(a.antiguidade));
-    database.ref('efetivo_v2').set(efetivo);
+    database.ref('efetivo').set(efetivo);
     notificarSalvamento('☁️ Efetivo atualizado!');
   }
 
   function adicionarMilitar() {
-    const antInput = document.getElementById('novoMilitarAntiguidade').value;
-    const nomeInput = document.getElementById('novoMilitarNome').value.trim();
-
-    if (nomeInput) {
-      const rotuloCompleto = `${antInput} - ${nomeInput}`;
-      efetivo.push({
-        antiguidade: antInput,
-        nome: nomeInput,
-        rotulo: rotuloCompleto
-      });
-
-      document.getElementById('novoMilitarNome').value = '';
+    const input = document.getElementById('novoMilitar');
+    const nome = input.value.trim();
+    if (nome) {
+      efetivo.push(nome);
+      input.value = '';
       salvarEfetivoNuvem();
     }
   }
@@ -786,7 +764,7 @@
     efetivo.forEach((militar, idx) => {
       container.innerHTML += `
         <div class="militar-tag">
-          ${militar.rotulo}
+          ${militar}
           <span onclick="removerMilitar(${idx})">&times;</span>
         </div>
       `;
@@ -797,15 +775,15 @@
     const select = document.getElementById('filtroMilitar');
     select.innerHTML = '<option value="">-- Nenhum --</option>';
     efetivo.forEach(m => {
-      select.innerHTML += `<option value="${m.rotulo}">${m.rotulo}</option>`;
+      select.innerHTML += `<option value="${m}">${m}</option>`;
     });
   }
 
   function getOptionsHtml(selecionado = '') {
     let options = '<option value=""></option>';
     efetivo.forEach(m => {
-      const selectedAttr = m.rotulo === selecionado ? 'selected' : '';
-      options += `<option value="${m.rotulo}" ${selectedAttr}>${m.rotulo}</option>`;
+      const selectedAttr = m === selecionado ? 'selected' : '';
+      options += `<option value="${m}" ${selectedAttr}>${m}</option>`;
     });
     return options;
   }
@@ -816,8 +794,9 @@
     return `escala_${ano}_${mes}`;
   }
 
-  function alternarStatusMilitar(rotuloMilitar) {
-    const statusAtua = statusEfetivoMap[rotuloMilitar] || 'PRONTO';
+  // GERENCIADOR DE CICLO DE SITUAÇÃO ADMINISTRATIVA
+  function alternarStatusMilitar(militar) {
+    const statusAtua = statusEfetivoMap[militar] || 'PRONTO';
     let novoStatus = 'PRONTO';
 
     if (statusAtua === 'PRONTO') novoStatus = 'LICENCA_MEDICA';
@@ -826,11 +805,12 @@
     else if (statusAtua === 'LICENCA_PREMIO') novoStatus = 'DISPENSA';
     else novoStatus = 'PRONTO';
 
-    statusEfetivoMap[rotuloMilitar] = novoStatus;
+    statusEfetivoMap[militar] = novoStatus;
     database.ref('status_efetivo').set(statusEfetivoMap);
     notificarSalvamento('☁️ Situação administrativa atualizada!');
   }
 
+  // ATUALIZAR OS DOIS PAINÉIS SEPARADOS
   function atualizarStatusEfetivo() {
     const gridAdmin = document.getElementById('statusAdministrativoGrid');
     const gridDescanso = document.getElementById('statusDescansoGrid');
@@ -841,11 +821,10 @@
 
     const diaRef = parseInt(document.getElementById('diaConsulta').value) || 1;
 
-    efetivo.forEach(militarObj => {
-      const rotulo = militarObj.rotulo;
-      const stCustom = statusEfetivoMap[rotulo] || 'PRONTO';
+    efetivo.forEach(militar => {
+      const stCustom = statusEfetivoMap[militar] || 'PRONTO';
 
-      // 1. PAINEL ADMINISTRATIVO
+      // 1. RENDERIZAR PAINEL ADMINISTRATIVO (TODOS OS MILITARES)
       let cssAdmin = '';
       let descAdmin = '';
 
@@ -867,13 +846,13 @@
       }
 
       gridAdmin.innerHTML += `
-        <div class="status-card ${cssAdmin}" onclick="alternarStatusMilitar('${rotulo}')" title="Clique para alternar situação">
-          <div class="militar-nome">${rotulo}</div>
+        <div class="status-card ${cssAdmin}" onclick="alternarStatusMilitar('${militar}')" title="Clique para alternar situação">
+          <div class="militar-nome">${militar}</div>
           <div class="status-desc">${descAdmin}</div>
         </div>
       `;
 
-      // 2. PAINEL DE DESCANSO (MILITARES PRONTOS DE 10,00 A 0,10)
+      // 2. RENDERIZAR PAINEL DE DESCANSO (APENAS MILITARES PRONTOS)
       if (stCustom === 'PRONTO') {
         let diasDesdeUltimoServico = -1;
 
@@ -887,7 +866,7 @@
               ...(row.eqB || [])
             ].filter(Boolean);
 
-            if (escalados.includes(rotulo)) {
+            if (escalados.includes(militar)) {
               diasDesdeUltimoServico = i;
               break;
             }
@@ -895,34 +874,28 @@
         }
 
         let cssDescanso = '';
-        let notaPontuacao = '10.00';
         let descDescanso = '';
 
         if (diasDesdeUltimoServico === 0) {
           cssDescanso = 'st-servico';
-          notaPontuacao = '0.10';
-          descDescanso = `🚨 Nota: ${notaPontuacao} (Em Serviço)`;
+          descDescanso = '🚨 EM SERVIÇO';
         } else if (diasDesdeUltimoServico === 1) {
           cssDescanso = 'st-dia1';
-          notaPontuacao = '3.50';
-          descDescanso = `🔴 Nota: ${notaPontuacao} (1º Dia Folga)`;
+          descDescanso = '🔴 1º Dia Folga (Não Descansado)';
         } else if (diasDesdeUltimoServico === 2) {
           cssDescanso = 'st-dia2';
-          notaPontuacao = '6.80';
-          descDescanso = `🟡 Nota: ${notaPontuacao} (2º Dia Folga)`;
+          descDescanso = '🟡 2º Dia Folga (Parcial)';
         } else if (diasDesdeUltimoServico >= 3) {
           cssDescanso = 'st-dia3';
-          notaPontuacao = '10.00';
-          descDescanso = `🟢 Nota: ${notaPontuacao} (100% Descansado)`;
+          descDescanso = '🟢 3º Dia Folga (Pronto / 100% Descansado)';
         } else {
           cssDescanso = 'st-sem-dados';
-          notaPontuacao = '10.00';
-          descDescanso = `⚪ Nota: ${notaPontuacao} (Sem registro no mês)`;
+          descDescanso = '⚪ Sem registro no período';
         }
 
         gridDescanso.innerHTML += `
           <div class="status-card ${cssDescanso}">
-            <div class="militar-nome">${rotulo}</div>
+            <div class="militar-nome">${militar}</div>
             <div class="status-desc">${descDescanso}</div>
           </div>
         `;
@@ -1019,11 +992,11 @@
   }
 
   function destacarMilitarNaTabela() {
-    const rotuloFiltro = document.getElementById('filtroMilitar').value;
+    const nomeFiltro = document.getElementById('filtroMilitar').value;
     const selects = document.querySelectorAll('#corpoTabela select');
 
     selects.forEach(select => {
-      if (rotuloFiltro && select.value === rotuloFiltro) {
+      if (nomeFiltro && select.value === nomeFiltro) {
         select.classList.add('highlight-militar');
       } else {
         select.classList.remove('highlight-militar');
@@ -1110,9 +1083,9 @@
     const linhas = document.querySelectorAll('#corpoTabela tr');
     linhas.forEach((row, index) => {
       const p1 = row.querySelector('.plantao-1');
-      const militarIndex = index % efetivo.length;
+      const militarIndex = index % 4;
       if (efetivo[militarIndex]) {
-        p1.value = efetivo[militarIndex].rotulo;
+        p1.value = efetivo[militarIndex];
       }
     });
 
