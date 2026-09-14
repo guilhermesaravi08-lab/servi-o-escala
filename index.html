@@ -21,7 +21,7 @@
       --status-licenca-premio: #7c3aed; /* Roxo */
       --status-dispensa: #475569;       /* Cinza */
 
-      /* Cores de Descanso (24x72) */
+      /* Cores de Nível de Descanso */
       --status-dia1: #ef4444;           /* Vermelho (1º dia folga) */
       --status-dia2: #eab308;           /* Amarelo (2º dia folga) */
       --status-dia3: #22c55e;           /* Verde (3º dia folga) */
@@ -156,7 +156,6 @@
       transition: all 0.3s ease;
     }
 
-    /* CARDS DE ESTATÍSTICAS DO MÊS */
     .stats-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -207,7 +206,6 @@
       color: #334155;
     }
 
-    /* GRIDS E CARDS DE STATUS */
     .status-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -240,14 +238,12 @@
       opacity: 0.95;
     }
 
-    /* Cores de Afastamentos / Situação Administrativa */
     .st-pronto { background-color: var(--status-pronto); color: #ffffff; }
     .st-licenca-medica { background-color: var(--status-licenca-medica); color: #ffffff; }
     .st-ferias { background-color: var(--status-ferias); color: #ffffff; }
     .st-licenca-premio { background-color: var(--status-licenca-premio); color: #ffffff; }
     .st-dispensa { background-color: var(--status-dispensa); color: #ffffff; }
 
-    /* Cores de Nível de Descanso */
     .st-dia1 { background-color: var(--status-dia1); color: #ffffff; }
     .st-dia2 { background-color: var(--status-dia2); color: #0f172a; }
     .st-dia3 { background-color: var(--status-dia3); color: #ffffff; }
@@ -412,7 +408,6 @@
     .row-even { background-color: rgba(255, 255, 255, 0.9); }
     .row-odd { background-color: rgba(248, 250, 252, 0.9); }
     
-    /* DESTAQUE DE FINAIS DE SEMANA */
     .row-fds { background-color: rgba(226, 232, 240, 0.65) !important; }
     .row-fds td:nth-child(2) { color: #dc2626; font-weight: 800; }
 
@@ -439,7 +434,6 @@
       transition: all 0.2s ease;
     }
 
-    /* FILTRO DE DESTAQUE DE MILITAR */
     .highlight-militar {
       background-color: #22c55e !important;
       color: #ffffff !important;
@@ -448,7 +442,6 @@
       box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
     }
 
-    /* ALERTA DE CONFLITO DE ESCALA */
     .conflito-alerta {
       background-color: #ef4444 !important;
       color: #ffffff !important;
@@ -538,11 +531,11 @@
       </div>
     </div>
 
-    <!-- CADASTRO DE EFETIVO -->
+    <!-- CADASTRO DE EFETIVO SIMPLES -->
     <div class="efetivo-section">
       <h3>Cadastro do Efetivo (Militares)</h3>
       <div class="control-group">
-        <input type="text" id="novoMilitar" placeholder="Ex: Cb Silva, Sd Oliveira...">
+        <input type="text" id="novoMilitarNome" placeholder="Ex: Cb Silva, Sd Oliveira..." style="flex-grow: 1;">
         <button onclick="adicionarMilitar()">+ Adicionar Militar</button>
       </div>
       <div class="militar-list" id="listaMilitares"></div>
@@ -568,7 +561,7 @@
       </div>
     </div>
 
-    <!-- 2. PAINEL DE NÍVEL DE DESCANSO (APENAS MILITARES PRONTOS) -->
+    <!-- 2. PAINEL DE NÍVEL DE DESCANSO (MILITARES PRONTOS) -->
     <div class="status-panel">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <h3>2. Nível de Descanso (Apenas Militares PRONTOS)</h3>
@@ -583,10 +576,10 @@
       </div>
 
       <div class="legenda-status">
+        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia3);"></div> 🟢 Pronto / 100% Descansado</div>
+        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia2);"></div> 🟡 Descanso Parcial (2º Dia de Folga)</div>
+        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia1);"></div> 🔴 Pouco Descansado (1º Dia de Folga)</div>
         <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-servico);"></div> 🚨 Em Serviço</div>
-        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia1);"></div> 🔴 1º Dia Folga (Não Descansado)</div>
-        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia2);"></div> 🟡 2º Dia Folga (Parcial)</div>
-        <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--status-dia3);"></div> 🟢 3º Dia Folga (Pronto / 100% Descansado)</div>
       </div>
     </div>
 
@@ -679,8 +672,8 @@
   const database = firebase.database();
   const auth = firebase.auth();
 
-  let efetivo = [];
-  let statusEfetivoMap = {}; // Armazena situação administrativa
+  let efetivo = []; // Lista de nomes simples (ex: ['Cb Silva', 'Sd Oliveira'])
+  let statusEfetivoMap = {}; 
   let dadosEscalaAtual = [];
 
   const diasSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
@@ -744,11 +737,11 @@
   }
 
   function adicionarMilitar() {
-    const input = document.getElementById('novoMilitar');
-    const nome = input.value.trim();
-    if (nome) {
-      efetivo.push(nome);
-      input.value = '';
+    const nomeInput = document.getElementById('novoMilitarNome').value.trim();
+
+    if (nomeInput) {
+      efetivo.push(nomeInput);
+      document.getElementById('novoMilitarNome').value = '';
       salvarEfetivoNuvem();
     }
   }
@@ -794,9 +787,8 @@
     return `escala_${ano}_${mes}`;
   }
 
-  // GERENCIADOR DE CICLO DE SITUAÇÃO ADMINISTRATIVA
-  function alternarStatusMilitar(militar) {
-    const statusAtua = statusEfetivoMap[militar] || 'PRONTO';
+  function alternarStatusMilitar(nomeMilitar) {
+    const statusAtua = statusEfetivoMap[nomeMilitar] || 'PRONTO';
     let novoStatus = 'PRONTO';
 
     if (statusAtua === 'PRONTO') novoStatus = 'LICENCA_MEDICA';
@@ -805,12 +797,11 @@
     else if (statusAtua === 'LICENCA_PREMIO') novoStatus = 'DISPENSA';
     else novoStatus = 'PRONTO';
 
-    statusEfetivoMap[militar] = novoStatus;
+    statusEfetivoMap[nomeMilitar] = novoStatus;
     database.ref('status_efetivo').set(statusEfetivoMap);
     notificarSalvamento('☁️ Situação administrativa atualizada!');
   }
 
-  // ATUALIZAR OS DOIS PAINÉIS SEPARADOS
   function atualizarStatusEfetivo() {
     const gridAdmin = document.getElementById('statusAdministrativoGrid');
     const gridDescanso = document.getElementById('statusDescansoGrid');
@@ -824,7 +815,7 @@
     efetivo.forEach(militar => {
       const stCustom = statusEfetivoMap[militar] || 'PRONTO';
 
-      // 1. RENDERIZAR PAINEL ADMINISTRATIVO (TODOS OS MILITARES)
+      // 1. PAINEL ADMINISTRATIVO
       let cssAdmin = '';
       let descAdmin = '';
 
@@ -852,7 +843,7 @@
         </div>
       `;
 
-      // 2. RENDERIZAR PAINEL DE DESCANSO (APENAS MILITARES PRONTOS)
+      // 2. PAINEL DE DESCANSO (MILITARES PRONTOS)
       if (stCustom === 'PRONTO') {
         let diasDesdeUltimoServico = -1;
 
@@ -878,19 +869,19 @@
 
         if (diasDesdeUltimoServico === 0) {
           cssDescanso = 'st-servico';
-          descDescanso = '🚨 EM SERVIÇO';
+          descDescanso = `🚨 Em Serviço`;
         } else if (diasDesdeUltimoServico === 1) {
           cssDescanso = 'st-dia1';
-          descDescanso = '🔴 1º Dia Folga (Não Descansado)';
+          descDescanso = `🔴 1º Dia de Folga`;
         } else if (diasDesdeUltimoServico === 2) {
           cssDescanso = 'st-dia2';
-          descDescanso = '🟡 2º Dia Folga (Parcial)';
+          descDescanso = `🟡 2º Dia de Folga`;
         } else if (diasDesdeUltimoServico >= 3) {
           cssDescanso = 'st-dia3';
-          descDescanso = '🟢 3º Dia Folga (Pronto / 100% Descansado)';
+          descDescanso = `🟢 Pronto / 100% Descansado`;
         } else {
           cssDescanso = 'st-sem-dados';
-          descDescanso = '⚪ Sem registro no período';
+          descDescanso = `⚪ Sem registro no mês`;
         }
 
         gridDescanso.innerHTML += `
@@ -1083,7 +1074,7 @@
     const linhas = document.querySelectorAll('#corpoTabela tr');
     linhas.forEach((row, index) => {
       const p1 = row.querySelector('.plantao-1');
-      const militarIndex = index % 4;
+      const militarIndex = index % efetivo.length;
       if (efetivo[militarIndex]) {
         p1.value = efetivo[militarIndex];
       }
