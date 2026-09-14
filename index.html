@@ -1,46 +1,523 @@
-<!-- Carregamento do SDK do Firebase -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escala ALI/BPMCHOQUE 2026</title>
+  
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --primary-color: #3b82f6;
+      --accent-color: #10b981;
+      --bg-glass: rgba(15, 23, 42, 0.85);
+      --bg-glass-card: rgba(30, 41, 59, 0.70);
+      --border-glass: rgba(255, 255, 255, 0.12);
+      --border-radius: 16px;
+      
+      /* Cores das Equipes com transparência */
+      --eq-a-bg: rgba(59, 130, 246, 0.18);
+      --eq-b-bg: rgba(234, 179, 8, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      color: #f1f5f9;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.12) 0%, transparent 40%);
+      background-attachment: fixed;
+      padding: 25px 15px 40px 170px;
+    }
+
+    .brasao-fixo {
+      position: fixed;
+      top: 25px;
+      left: 20px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15, 23, 42, 0.9), rgba(0, 0, 0, 0.95)), url('brasao.png') no-repeat center center;
+      background-size: cover;
+      z-index: 999;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(59, 130, 246, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .brasao-fallback-svg {
+      width: 75%;
+      height: 75%;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glass);
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #ffffff;
+      text-transform: uppercase;
+      font-size: 26px;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .subtitle-badge {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .header-box {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .save-status {
+      text-align: center;
+      font-size: 13px;
+      color: #34d399;
+      font-weight: 600;
+      min-height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .save-status.local {
+      color: #fbbf24;
+    }
+
+    .efetivo-section, .controls {
+      background: var(--bg-glass-card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-glass);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      margin-bottom: 22px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .efetivo-section h3 {
+      margin-bottom: 14px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    input, select, button {
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+      background: rgba(15, 23, 42, 0.7);
+      color: #f8fafc;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-success {
+      background-color: var(--accent-color);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .btn-success:hover {
+      background-color: #059669;
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+
+    .militar-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .militar-tag {
+      background: rgba(30, 41, 59, 0.9);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #e2e8f0;
+    }
+
+    .militar-tag span {
+      color: #f87171;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .militar-tag span:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-glass);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: rgba(15, 23, 42, 0.85);
+      text-align: center;
+    }
+
+    th, td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      border-right: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 8px;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    th:last-child, td:last-child {
+      border-right: none;
+    }
+
+    .header-mes {
+      background: linear-gradient(135deg, #059669, #047857);
+      color: white;
+      font-size: 19px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 16px;
+      border: none;
+    }
+
+    th {
+      background: rgba(30, 41, 59, 0.95);
+      color: #cbd5e1;
+      font-weight: 700;
+      padding: 12px 8px;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .row-even {
+      background-color: rgba(15, 23, 42, 0.6);
+    }
+
+    .row-odd {
+      background-color: rgba(30, 41, 59, 0.4);
+    }
+
+    tr:hover {
+      background-color: rgba(51, 65, 85, 0.5);
+    }
+
+    .eq-a { background-color: var(--eq-a-bg); }
+    .eq-b { background-color: var(--eq-b-bg); }
+
+    .cell-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 2px;
+    }
+
+    td select, td input {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.8);
+      color: #f1f5f9;
+      text-align: center;
+      font-size: 12px;
+      padding: 6px;
+      border-radius: 6px;
+    }
+
+    td select:focus, td input:focus {
+      background: rgba(15, 23, 42, 0.95);
+      border-color: var(--primary-color);
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding-left: 15px;
+      }
+      .brasao-fixo {
+        display: none;
+      }
+    }
+
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        padding: 0 !important;
+      }
+      .brasao-fixo, .controls, .efetivo-section, button, .save-status, .subtitle-badge {
+        display: none !important;
+      }
+      .container {
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+        background: white;
+        border: none;
+      }
+      table {
+        background: white !important;
+        color: black !important;
+        font-size: 11px;
+        border: 1px solid #000;
+      }
+      th, td {
+        border: 1px solid #000 !important;
+        color: black !important;
+      }
+      .header-mes {
+        background: #ccc !important;
+        color: black !important;
+      }
+      th {
+        background: #eee !important;
+        color: black !important;
+      }
+      select, input {
+        border: none !important;
+        appearance: none;
+        -webkit-appearance: none;
+        background: transparent !important;
+        color: black !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Brasão Fixo no Canto Superior Esquerdo -->
+<div class="brasao-fixo" id="brasaoContainer">
+  <!-- SVG Fallback bonito se a imagem local brasao.png não existir -->
+  <svg class="brasao-fallback-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="45" stroke="#f59e0b" stroke-width="4" fill="#0f172a"/>
+    <path d="M50 15 L80 35 L80 65 L50 85 L20 65 L20 35 Z" stroke="#3b82f6" stroke-width="3" fill="none"/>
+    <circle cx="50" cy="45" r="12" fill="#ef4444"/>
+    <text x="50" y="78" font-size="9" fill="#ffffff" font-weight="bold" text-anchor="middle">CHOQUE</text>
+  </svg>
+</div>
+
+<div class="container">
+  <div class="header-box">
+    <span class="subtitle-badge">POLÍCIA MILITAR DE MATO GROSSO DO SUL</span>
+    <h1>Escala ALI/BPMCHOQUE 2026</h1>
+  </div>
+  
+  <div class="save-status" id="saveStatus">🔄 Verificando conexão de armazenamento...</div>
+
+  <div class="efetivo-section">
+    <h3>Cadastro do Efetivo (Militares Prontos)</h3>
+    <div class="control-group">
+      <input type="text" id="novoMilitar" placeholder="Ex: Cb Silva, Sd Oliveira, 1º Ten Santos...">
+      <button onclick="adicionarMilitar()">+ Adicionar Militar</button>
+    </div>
+    <div class="militar-list" id="listaMilitares"></div>
+  </div>
+
+  <div class="controls">
+    <div class="control-group">
+      <label for="mes">Mês de Referência:</label>
+      <select id="mes" onchange="carregarEscala()">
+        <option value="0">Janeiro</option>
+        <option value="1">Fevereiro</option>
+        <option value="2">Março</option>
+        <option value="3">Abril</option>
+        <option value="4">Maio</option>
+        <option value="5">Junho</option>
+        <option value="6">Julho</option>
+        <option value="7">Agosto</option>
+        <option value="8">Setembro</option>
+        <option value="9" selected>Outubro</option>
+        <option value="10">Novembro</option>
+        <option value="11">Dezembro</option>
+      </select>
+
+      <label for="ano">Ano:</label>
+      <input type="number" id="ano" value="2026" style="width: 85px;" onchange="carregarEscala()">
+    </div>
+
+    <div class="control-group">
+      <button class="btn-success" onclick="preencherEscalaAutomática()">⚡ Auto-Preencher Plantão (24x72)</button>
+      <button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table id="tabelaEscala">
+      <thead>
+        <tr>
+          <th colspan="6" class="header-mes" id="tituloMes">OUTUBRO 2026</th>
+        </tr>
+        <tr>
+          <th style="width: 50px;">OR</th>
+          <th style="width: 60px;">DIA</th>
+          <th style="width: 270px;">PLANTÃO (3 Militares)</th>
+          <th style="width: 270px;">EQ A (3 Militares)</th>
+          <th style="width: 270px;">EQ B (3 Militares)</th>
+          <th>OBS</th>
+        </tr>
+      </thead>
+      <tbody id="corpoTabela">
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-  // 1. Cole aqui a configuração fornecida pelo seu painel do Firebase
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyClpFu4bkDYoqfVtoT53nNjTeokl3Hqlt8",
-  authDomain: "projeto01-e3302.firebaseapp.com",
-  databaseURL: "https://projeto01-e3302-default-rtdb.firebaseio.com",
-  storageBucket: "projeto01-e3302.firebasestorage.app",
-  messagingSenderId: "573542841342",
-  appId: "1:573542841342:web:748685f4648716469f5eaf",
-  measurementId: "G-47SF208ZCR"
-};
+  /* 
+    🔴 SEU FIREBASE CONFIG:
+    Se você preencher as chaves abaixo válidas, o sistema usa a Nuvem.
+    Se deixar assim ou houver erro, o sistema AUTOMATICAMENTE usa o LocalStorage sem travar nada!
+  */
+  const firebaseConfig = {
+    apiKey: "",
+    authDomain: "",
+    databaseURL: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: ""
+  };
 
-  // Inicializa o Firebase
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
+  let database = null;
+  let usandoFirebase = false;
 
-  let efetivo = [];
+  try {
+    if (firebaseConfig.databaseURL && firebaseConfig.apiKey && firebaseConfig.databaseURL.startsWith("http")) {
+      firebase.initializeApp(firebaseConfig);
+      database = firebase.database();
+      usandoFirebase = true;
+    }
+  } catch (e) {
+    console.warn("Firebase não configurado ou erro de inicialização. Mudando para modo LocalStorage.", e);
+    usandoFirebase = false;
+  }
+
+  let efetivo = JSON.parse(localStorage.getItem('efetivo_backup_local')) || ['Cb Silva', 'Sd Oliveira', 'Sd Santos', 'Sd Costa'];
+
   const diasSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
   const mesesNome = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
 
-  function notificarSalvamento(texto = '💾 Salvação concluída!') {
+  // Notificação de Status
+  function notificarStatus(texto) {
     const status = document.getElementById('saveStatus');
-    status.innerText = texto;
-    setTimeout(() => {
-      status.innerText = '☁️ Conectado e sincronizado em tempo real';
-    }, 2000);
+    if (usandoFirebase) {
+      status.className = "save-status";
+      status.innerText = "☁️ " + texto;
+    } else {
+      status.className = "save-status local";
+      status.innerText = "💾 (Modo Local) " + texto;
+    }
   }
 
-  // --- GESTÃO DO EFETIVO NA NUVEM ---
-  database.ref('efetivo').on('value', (snapshot) => {
-    efetivo = snapshot.val() || ['Cb Silva', 'Sd Oliveira', 'Sd Santos', 'Sd Costa'];
+  function salvarEfetivo() {
+    localStorage.setItem('efetivo_backup_local', JSON.stringify(efetivo));
+    if (usandoFirebase && database) {
+      database.ref('efetivo').set(efetivo);
+      notificarStatus("Efetivo sincronizado na nuvem!");
+    } else {
+      notificarStatus("Efetivo salvo localmente no navegador!");
+    }
     renderizarEfetivo();
     carregarEscala();
-  });
-
-  function salvarEfetivoNuvem() {
-    database.ref('efetivo').set(efetivo);
-    notificarSalvamento();
   }
 
   function adicionarMilitar() {
@@ -49,13 +526,13 @@ const firebaseConfig = {
     if (nome) {
       efetivo.push(nome);
       input.value = '';
-      salvarEfetivoNuvem();
+      salvarEfetivo();
     }
   }
 
   function removerMilitar(index) {
     efetivo.splice(index, 1);
-    salvarEfetivoNuvem();
+    salvarEfetivo();
   }
 
   function renderizarEfetivo() {
@@ -83,10 +560,9 @@ const firebaseConfig = {
   function getChaveMes() {
     const mes = document.getElementById('mes').value;
     const ano = document.getElementById('ano').value;
-    return `escala_${ano}_${mes}`;
+    return `escala_v3_${ano}_${mes}`;
   }
 
-  // --- SALVAMENTO E SINCRONIZAÇÃO DA ESCALA ---
   function salvarDadosTabela() {
     const chave = getChaveMes();
     const linhas = document.querySelectorAll('#corpoTabela tr');
@@ -113,9 +589,67 @@ const firebaseConfig = {
       dadosEscala.push({ plantao, eqA, eqB, obs });
     });
 
-    // Envia os dados atualizados para a nuvem
-    database.ref('escalas/' + chave).set(dadosEscala);
-    notificarSalvamento('☁️ Alteração salva na nuvem!');
+    // Salva localmente como garantia
+    localStorage.setItem(chave, JSON.stringify(dadosEscala));
+
+    // Salva no Firebase se disponível
+    if (usandoFirebase && database) {
+      database.ref('escalas/' + chave).set(dadosEscala);
+      notificarStatus("Alteração salva na Nuvem!");
+    } else {
+      notificarStatus("Alteração salva no navegador!");
+    }
+  }
+
+  function renderizarTabelaDOM(dadosSalvos, totalDias, ano, mes) {
+    const corpo = document.getElementById('corpoTabela');
+    corpo.innerHTML = '';
+
+    for (let dia = 1; dia <= totalDias; dia++) {
+      const dataObj = new Date(ano, mes, dia);
+      const diaSemanaTexto = diasSemana[dataObj.getDay()];
+      const isEvenRow = dia % 2 === 0;
+      const rowClass = isEvenRow ? 'row-odd' : 'row-even';
+      const diaSalvo = dadosSalvos[dia - 1] || { plantao: ['', '', ''], eqA: ['', '', ''], eqB: ['', '', ''], obs: '' };
+
+      const tr = document.createElement('tr');
+      tr.className = rowClass;
+
+      tr.innerHTML = `
+        <td><strong>${dia}.</strong></td>
+        <td><strong>${diaSemanaTexto}</strong></td>
+        
+        <td>
+          <div class="cell-group">
+            <select class="plantao-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[0] : '')}</select>
+            <select class="plantao-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[1] : '')}</select>
+            <select class="plantao-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[2] : '')}</select>
+          </div>
+        </td>
+        
+        <td class="eq-a">
+          <div class="cell-group">
+            <select class="eqa-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[0] : '')}</select>
+            <select class="eqa-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[1] : '')}</select>
+            <select class="eqa-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[2] : '')}</select>
+          </div>
+        </td>
+        
+        <td class="eq-b">
+          <div class="cell-group">
+            <select class="eqb-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[0] : '')}</select>
+            <select class="eqb-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[1] : '')}</select>
+            <select class="eqb-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[2] : '')}</select>
+          </div>
+        </td>
+        
+        <td>
+          <input type="text" class="input-obs" value="${diaSalvo.obs || ''}" placeholder="..." oninput="salvarDadosTabela()">
+        </td>
+      `;
+
+      corpo.appendChild(tr);
+    }
   }
 
   function carregarEscala() {
@@ -123,64 +657,26 @@ const firebaseConfig = {
     const ano = parseInt(document.getElementById('ano').value);
     
     document.getElementById('tituloMes').innerText = `${mesesNome[mes]} ${ano}`;
-
     const totalDias = new Date(ano, mes + 1, 0).getDate();
     const chave = getChaveMes();
 
-    // Escuta alterações em tempo real do mês selecionado
-    database.ref('escalas/' + chave).off(); // Remove ouvinte anterior
-    database.ref('escalas/' + chave).on('value', (snapshot) => {
-      const dadosSalvos = snapshot.val() || [];
-      const corpo = document.getElementById('corpoTabela');
-      corpo.innerHTML = '';
-
-      for (let dia = 1; dia <= totalDias; dia++) {
-        const dataObj = new Date(ano, mes, dia);
-        const diaSemanaTexto = diasSemana[dataObj.getDay()];
-        const isEvenRow = dia % 2 === 0;
-        const rowClass = isEvenRow ? 'row-odd' : 'row-even';
-        const diaSalvo = dadosSalvos[dia - 1] || { plantao: ['', '', ''], eqA: ['', '', ''], eqB: ['', '', ''], obs: '' };
-
-        const tr = document.createElement('tr');
-        tr.className = rowClass;
-
-        tr.innerHTML = `
-          <td><strong>${dia}.</strong></td>
-          <td><strong>${diaSemanaTexto}</strong></td>
-          <td>
-            <div class="cell-group">
-              <select class="plantao-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[0] : '')}</select>
-              <select class="plantao-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[1] : '')}</select>
-              <select class="plantao-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[2] : '')}</select>
-            </div>
-          </td>
-          <td class="eq-a">
-            <div class="cell-group">
-              <select class="eqa-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[0] : '')}</select>
-              <select class="eqa-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[1] : '')}</select>
-              <select class="eqa-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[2] : '')}</select>
-            </div>
-          </td>
-          <td class="eq-b">
-            <div class="cell-group">
-              <select class="eqb-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[0] : '')}</select>
-              <select class="eqb-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[1] : '')}</select>
-              <select class="eqb-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[2] : '')}</select>
-            </div>
-          </td>
-          <td>
-            <input type="text" class="input-obs" value="${diaSalvo.obs || ''}" placeholder="..." oninput="salvarDadosTabela()">
-          </td>
-        `;
-
-        corpo.appendChild(tr);
-      }
-    });
+    if (usandoFirebase && database) {
+      notificarStatus("Sincronizado com o Firebase");
+      database.ref('escalas/' + chave).off();
+      database.ref('escalas/' + chave).on('value', (snapshot) => {
+        const dadosSalvos = snapshot.val() || JSON.parse(localStorage.getItem(chave)) || [];
+        renderizarTabelaDOM(dadosSalvos, totalDias, ano, mes);
+      });
+    } else {
+      notificarStatus("Executando via Armazenamento Local");
+      const dadosSalvos = JSON.parse(localStorage.getItem(chave)) || [];
+      renderizarTabelaDOM(dadosSalvos, totalDias, ano, mes);
+    }
   }
 
   function preencherEscalaAutomática() {
     if (efetivo.length < 4) {
-      alert("Cadastre pelo menos 4 militares no efetivo!");
+      alert("Cadastre pelo menos 4 militares no efetivo para o ciclo 24x72!");
       return;
     }
 
@@ -195,4 +691,20 @@ const firebaseConfig = {
 
     salvarDadosTabela();
   }
+
+  // Testar carregamento de brasao.png
+  window.onload = function() {
+    const imgTest = new Image();
+    imgTest.src = 'brasao.png';
+    imgTest.onload = function() {
+      document.getElementById('brasaoContainer').style.backgroundImage = "url('brasao.png')";
+      document.getElementById('brasaoContainer').innerHTML = ''; // Remove o SVG fallback
+    };
+
+    renderizarEfetivo();
+    carregarEscala();
+  };
 </script>
+
+</body>
+</html>
