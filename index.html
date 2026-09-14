@@ -143,7 +143,7 @@
       transition: all 0.3s ease;
     }
 
-    .efetivo-section, .controls {
+    .efetivo-section, .controls, .painel-anotacoes-mes {
       background: var(--bg-glass-card);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.6);
@@ -153,13 +153,37 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
 
-    .efetivo-section h3 {
+    .efetivo-section h3, .painel-anotacoes-mes h3 {
       margin-top: 0;
       margin-bottom: 12px;
       font-size: 15px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: #334155;
+    }
+
+    /* ESTILO PAINEL MENSAL DE ANOTAÇÕES */
+    .textarea-anotacoes-mes {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 13px;
+      padding: 10px 12px;
+      border: 1px solid #fde047;
+      background-color: #fefce8;
+      line-height: 20px;
+      border-radius: 8px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+      color: #1e293b;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .textarea-anotacoes-mes:focus {
+      background-color: #ffffff;
+      border-color: #eab308;
+      box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.25);
     }
 
     .controls {
@@ -325,7 +349,6 @@
       box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
     }
 
-    /* BLOQUINHO DE NOTAS LISO (SEM LINHAS E SEM PLACEHOLDER) */
     .input-obs {
       width: 100%;
       min-height: 60px;
@@ -358,7 +381,7 @@
       body { background: none !important; padding: 0 !important; }
       .brasao-fixo, .login-wrapper { display: none !important; }
       .container { box-shadow: none; padding: 0; max-width: 100%; background: white; backdrop-filter: none; border: none; }
-      .controls, .efetivo-section, button, .save-status, .btn-logout { display: none !important; }
+      .controls, .efetivo-section, .painel-anotacoes-mes, button, .save-status, .btn-logout { display: none !important; }
       table { font-size: 11px; border: 1px solid #000; }
       th, td { border: 1px solid #000 !important; }
       select { border: none !important; appearance: none; -webkit-appearance: none; background: transparent !important; }
@@ -429,6 +452,12 @@
       </div>
     </div>
 
+    <!-- NOVO PAINEL DE ANOTAÇÕES DO MÊS -->
+    <div class="painel-anotacoes-mes">
+      <h3 id="tituloAnotacoesMes">Anotações Gerais do Mês</h3>
+      <textarea id="anotacoesMensaisText" class="textarea-anotacoes-mes" placeholder="Digite aqui orientações gerais, recados ou diretrizes importantes para este mês..." onblur="salvarAnotacoesMes()"></textarea>
+    </div>
+
     <div class="table-container">
       <table id="tabelaEscala">
         <thead>
@@ -458,8 +487,7 @@
 
 <script>
   // 🔴 SUBSTITUA ESTE BLOCO PELAS SUAS CHAVES DO FIREBASE 🔴
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+  const firebaseConfig = {
   apiKey: "AIzaSyClpFu4bkDYoqfVtoT53nNjTeokl3Hqlt8",
   authDomain: "projeto01-e3302.firebaseapp.com",
   databaseURL: "https://projeto01-e3302-default-rtdb.firebaseio.com",
@@ -568,6 +596,14 @@ const firebaseConfig = {
     return `escala_${ano}_${mes}`;
   }
 
+  // SALVAR ANOTAÇÕES EXCLUSIVAS DO MÊS
+  function salvarAnotacoesMes() {
+    const chave = getChaveMes();
+    const textoAnotacoes = document.getElementById('anotacoesMensaisText').value;
+    database.ref('anotacoes_mes/' + chave).set(textoAnotacoes);
+    notificarSalvamento('☁️ Anotação do mês salva!');
+  }
+
   function salvarDadosTabela() {
     const chave = getChaveMes();
     const linhas = document.querySelectorAll('#corpoTabela tr');
@@ -603,10 +639,17 @@ const firebaseConfig = {
     const ano = parseInt(document.getElementById('ano').value);
     
     document.getElementById('tituloMes').innerText = `${mesesNome[mes]} ${ano}`;
+    document.getElementById('tituloAnotacoesMes').innerText = `Anotações Gerais - ${mesesNome[mes]} / ${ano}`;
 
     const totalDias = new Date(ano, mes + 1, 0).getDate();
     const chave = getChaveMes();
 
+    // Carregar Anotação do Mês
+    database.ref('anotacoes_mes/' + chave).once('value', (snapshot) => {
+      document.getElementById('anotacoesMensaisText').value = snapshot.val() || '';
+    });
+
+    // Carregar Escala do Mês
     database.ref('escalas/' + chave).off();
     database.ref('escalas/' + chave).once('value', (snapshot) => {
       const dadosSalvos = snapshot.val() || [];
