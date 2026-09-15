@@ -14,18 +14,23 @@
       --eq-a-bg: rgba(147, 197, 253, 0.55);
       --eq-b-bg: rgba(254, 240, 138, 0.55);
 
+      /* Cores dos Tipos de Escala */
+      --tipo-ord: #2563eb; /* Azul - Ordinária */
+      --tipo-ext: #ea580c; /* Laranja - Extra */
+      --tipo-prt: #16a34a; /* Verde - Protetor */
+
       /* Cores de Status de Afastamento */
-      --status-pronto: #16a34a;          /* Verde Forte */
-      --status-licenca-medica: #0f172a; /* Preto */
-      --status-ferias: #f97316;         /* Laranja */
-      --status-licenca-premio: #7c3aed; /* Roxo */
-      --status-dispensa: #475569;       /* Cinza */
+      --status-pronto: #16a34a;          
+      --status-licenca-medica: #0f172a; 
+      --status-ferias: #f97316;         
+      --status-licenca-premio: #7c3aed; 
+      --status-dispensa: #475569;       
 
       /* Cores de Nível de Descanso */
-      --status-dia1: #ef4444;           /* Vermelho (1º dia folga) */
-      --status-dia2: #eab308;           /* Amarelo (2º dia folga) */
-      --status-dia3: #22c55e;           /* Verde (3º dia folga) */
-      --status-servico: #3b82f6;        /* Azul (Em serviço) */
+      --status-dia1: #ef4444;           
+      --status-dia2: #eab308;           
+      --status-dia3: #22c55e;           
+      --status-servico: #3b82f6;        
     }
 
     * { box-sizing: border-box; }
@@ -110,7 +115,7 @@
     .app-content { display: none; }
 
     .container {
-      max-width: 1350px;
+      max-width: 1400px;
       margin: 0 auto;
       background: var(--bg-glass);
       backdrop-filter: blur(12px);
@@ -187,6 +192,57 @@
       color: #0f172a;
     }
 
+    /* PAINEL GRÁFICO DE CONTAGEM DE SERVIÇOS DO EFETIVO */
+    .grafico-panel {
+      background: var(--bg-glass-card);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      padding: 18px 22px;
+      border-radius: var(--border-radius);
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .grafico-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .grafico-bar-item {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .grafico-bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .grafico-bar-track {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .grafico-bar-fill {
+      height: 100%;
+      background: var(--accent-color);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
     .efetivo-section, .controls, .painel-anotacoes-mes, .status-panel {
       background: var(--bg-glass-card);
       backdrop-filter: blur(8px);
@@ -197,7 +253,7 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
 
-    .efetivo-section h3, .painel-anotacoes-mes h3, .status-panel h3 {
+    .efetivo-section h3, .painel-anotacoes-mes h3, .status-panel h3, .grafico-panel h3 {
       margin-top: 0;
       margin-bottom: 12px;
       font-size: 15px;
@@ -416,6 +472,7 @@
     .eq-a { background-color: var(--eq-a-bg); }
     .eq-b { background-color: var(--eq-b-bg); }
 
+    /* ESTILO DA CÉLULA COM SELECT DO NOME + TIPO DE ESCALA */
     .cell-group {
       display: flex;
       flex-direction: column;
@@ -423,16 +480,36 @@
       padding: 2px;
     }
 
-    td select {
-      width: 100%;
+    .militar-item-box {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .militar-item-box select.select-nome {
+      flex-grow: 1;
       border: 1px solid #cbd5e1;
       background: rgba(255, 255, 255, 0.95);
       text-align: center;
       font-size: 12px;
-      padding: 5px;
+      padding: 4px;
       border-radius: 6px;
-      transition: all 0.2s ease;
     }
+
+    .militar-item-box select.select-tipo {
+      width: 65px;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 2px;
+      border-radius: 6px;
+      text-align: center;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* CORES VISUAIS DO TIPO DE ESCALA NA TABELA */
+    .tipo-ORD { background-color: #dbeafe !important; color: var(--tipo-ord) !important; border-color: var(--tipo-ord) !important; }
+    .tipo-EXT { background-color: #ffedd5 !important; color: var(--tipo-ext) !important; border-color: var(--tipo-ext) !important; }
+    .tipo-PRT { background-color: #dcfce7 !important; color: var(--tipo-prt) !important; border-color: var(--tipo-prt) !important; }
 
     .highlight-militar {
       background-color: #22c55e !important;
@@ -481,7 +558,7 @@
       body { background: none !important; padding: 0 !important; }
       .brasao-fixo, .login-wrapper { display: none !important; }
       .container { box-shadow: none; padding: 0; max-width: 100%; background: white; backdrop-filter: none; border: none; }
-      .controls, .efetivo-section, .painel-anotacoes-mes, .status-panel, .stats-container, button, .save-status, .btn-logout { display: none !important; }
+      .controls, .efetivo-section, .painel-anotacoes-mes, .status-panel, .stats-container, .grafico-panel, button, .save-status, .btn-logout { display: none !important; }
       table { font-size: 11px; border: 1px solid #000; }
       th, td { border: 1px solid #000 !important; }
       select { border: none !important; appearance: none; -webkit-appearance: none; background: transparent !important; }
@@ -518,12 +595,8 @@
     <!-- PAINEL DE ESTATÍSTICAS / INDICADORES -->
     <div class="stats-container">
       <div class="stat-card">
-        <div class="stat-title">Total de Plantões no Mês</div>
+        <div class="stat-title">Total de Serviços no Mês</div>
         <div class="stat-value" id="statTotalPlantoes">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-title">Militar Mais Escalado</div>
-        <div class="stat-value" id="statMaisEscalado" style="font-size: 16px;">-</div>
       </div>
       <div class="stat-card">
         <div class="stat-title">Alertas de Conflito</div>
@@ -531,7 +604,15 @@
       </div>
     </div>
 
-    <!-- CADASTRO DE EFETIVO SIMPLES -->
+    <!-- PAINEL GRÁFICO DE CONTAGEM DE SERVIÇOS POR MILITAR -->
+    <div class="grafico-panel">
+      <h3>📊 Contagem de Serviços por Militar no Mês</h3>
+      <div class="grafico-grid" id="graficoGrid">
+        <!-- Renderizado via JS -->
+      </div>
+    </div>
+
+    <!-- CADASTRO DE EFETIVO -->
     <div class="efetivo-section">
       <h3>Cadastro do Efetivo (Militares)</h3>
       <div class="control-group">
@@ -637,10 +718,10 @@
           <tr>
             <th style="width: 45px;">OR</th>
             <th style="width: 55px;">DIA</th>
-            <th style="width: 250px;">PLANTÃO (3 Militares)</th>
-            <th style="width: 250px;">EQ A (3 Militares)</th>
-            <th style="width: 250px;">EQ B (3 Militares)</th>
-            <th style="width: 280px;">OBSERVAÇÕES</th>
+            <th style="width: 280px;">PLANTÃO (3 Militares)</th>
+            <th style="width: 280px;">EQ A (3 Militares)</th>
+            <th style="width: 280px;">EQ B (3 Militares)</th>
+            <th style="width: 250px;">OBSERVAÇÕES</th>
           </tr>
         </thead>
         <tbody id="corpoTabela">
@@ -672,7 +753,7 @@
   const database = firebase.database();
   const auth = firebase.auth();
 
-  let efetivo = []; // Lista de nomes simples (ex: ['Cb Silva', 'Sd Oliveira'])
+  let efetivo = []; 
   let statusEfetivoMap = {}; 
   let dadosEscalaAtual = [];
 
@@ -852,9 +933,9 @@
           if (diaAlvo >= 1 && dadosEscalaAtual[diaAlvo - 1]) {
             const row = dadosEscalaAtual[diaAlvo - 1];
             const escalados = [
-              ...(row.plantao || []),
-              ...(row.eqA || []),
-              ...(row.eqB || [])
+              ...(row.plantao ? row.plantao.map(x => x.nome) : []),
+              ...(row.eqA ? row.eqA.map(x => x.nome) : []),
+              ...(row.eqB ? row.eqB.map(x => x.nome) : [])
             ].filter(Boolean);
 
             if (escalados.includes(militar)) {
@@ -911,21 +992,17 @@
     const dadosEscala = [];
 
     linhas.forEach(row => {
-      const plantao = [
-        row.querySelector('.plantao-1').value,
-        row.querySelector('.plantao-2').value,
-        row.querySelector('.plantao-3').value
-      ];
-      const eqA = [
-        row.querySelector('.eqa-1').value,
-        row.querySelector('.eqa-2').value,
-        row.querySelector('.eqa-3').value
-      ];
-      const eqB = [
-        row.querySelector('.eqb-1').value,
-        row.querySelector('.eqb-2').value,
-        row.querySelector('.eqb-3').value
-      ];
+      const getBoxData = (className) => {
+        const selects = row.querySelectorAll('.' + className);
+        return Array.from(selects).map(select => ({
+          nome: select.querySelector('.select-nome').value,
+          tipo: select.querySelector('.select-tipo').value
+        }));
+      };
+
+      const plantao = getBoxData('cell-plantao');
+      const eqA = getBoxData('cell-eqa');
+      const eqB = getBoxData('cell-eqb');
       const obs = row.querySelector('.input-obs').value;
 
       dadosEscala.push({ plantao, eqA, eqB, obs });
@@ -940,6 +1017,29 @@
     notificarSalvamento('☁️ Alteração salva!');
   }
 
+  // ATUALIZAR GRÁFICO DE BARRAS DE SERVIÇOS POR MILITAR
+  function renderizarGraficoServicos(contagemMilitar, maxServicos) {
+    const grid = document.getElementById('graficoGrid');
+    grid.innerHTML = '';
+
+    efetivo.forEach(m => {
+      const total = contagemMilitar[m] || 0;
+      const porcentagem = maxServicos > 0 ? (total / maxServicos) * 100 : 0;
+
+      grid.innerHTML += `
+        <div class="grafico-bar-item">
+          <div class="grafico-bar-header">
+            <span>${m}</span>
+            <span><strong>${total}</strong> serviço(s)</span>
+          </div>
+          <div class="grafico-bar-track">
+            <div class="grafico-bar-fill" style="width: ${porcentagem}%;"></div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
   function validarConflitosEAtualizarStats() {
     let totalServicosNoMes = 0;
     let contagemMilitar = {};
@@ -948,10 +1048,10 @@
     const linhas = document.querySelectorAll('#corpoTabela tr');
 
     linhas.forEach(row => {
-      const selects = row.querySelectorAll('select');
-      const valores = Array.from(selects).map(s => s.value).filter(Boolean);
+      const selectsNome = row.querySelectorAll('.select-nome');
+      const valores = Array.from(selectsNome).map(s => s.value).filter(Boolean);
 
-      selects.forEach(s => s.classList.remove('conflito-alerta'));
+      selectsNome.forEach(s => s.classList.remove('conflito-alerta'));
 
       const contagemDia = {};
       valores.forEach(v => {
@@ -960,7 +1060,7 @@
         totalServicosNoMes++;
       });
 
-      selects.forEach(s => {
+      selectsNome.forEach(s => {
         if (s.value && contagemDia[s.value] > 1) {
           s.classList.add('conflito-alerta');
           totalConflitos++;
@@ -971,20 +1071,18 @@
     document.getElementById('statTotalPlantoes').innerText = totalServicosNoMes;
     document.getElementById('statConflitos').innerText = totalConflitos;
 
-    let maisEscalado = '-';
+    // Calcular o máximo de serviços para proporcionalidade das barras
     let maxServicos = 0;
     for (let m in contagemMilitar) {
-      if (contagemMilitar[m] > maxServicos) {
-        maxServicos = contagemMilitar[m];
-        maisEscalado = `${m} (${maxServicos}x)`;
-      }
+      if (contagemMilitar[m] > maxServicos) maxServicos = contagemMilitar[m];
     }
-    document.getElementById('statMaisEscalado').innerText = maisEscalado;
+
+    renderizarGraficoServicos(contagemMilitar, maxServicos);
   }
 
   function destacarMilitarNaTabela() {
     const nomeFiltro = document.getElementById('filtroMilitar').value;
-    const selects = document.querySelectorAll('#corpoTabela select');
+    const selects = document.querySelectorAll('#corpoTabela .select-nome');
 
     selects.forEach(select => {
       if (nomeFiltro && select.value === nomeFiltro) {
@@ -993,6 +1091,30 @@
         select.classList.remove('highlight-militar');
       }
     });
+  }
+
+  function atualizarCorTipoSelect(selectElement) {
+    const tipo = selectElement.value;
+    selectElement.className = 'select-tipo tipo-' + tipo;
+    salvarDadosTabela();
+  }
+
+  function criarItemBoxHtml(className, objetoSalvo = { nome: '', tipo: 'ORD' }) {
+    const nomeVal = objetoSalvo.nome || (typeof objetoSalvo === 'string' ? objetoSalvo : '');
+    const tipoVal = objetoSalvo.tipo || 'ORD';
+
+    return `
+      <div class="militar-item-box ${className}">
+        <select class="select-nome" onchange="salvarDadosTabela()">
+          ${getOptionsHtml(nomeVal)}
+        </select>
+        <select class="select-tipo tipo-${tipoVal}" onchange="atualizarCorTipoSelect(this)">
+          <option value="ORD" ${tipoVal === 'ORD' ? 'selected' : ''}>ORD</option>
+          <option value="EXT" ${tipoVal === 'EXT' ? 'selected' : ''}>EXT</option>
+          <option value="PRT" ${tipoVal === 'PRT' ? 'selected' : ''}>PRT</option>
+        </select>
+      </div>
+    `;
   }
 
   function carregarEscala() {
@@ -1022,7 +1144,11 @@
         const isFds = (diaSemanaNum === 0 || diaSemanaNum === 6);
         
         const rowClass = isFds ? 'row-fds' : (dia % 2 === 0 ? 'row-odd' : 'row-even');
-        const diaSalvo = dadosEscalaAtual[dia - 1] || { plantao: ['', '', ''], eqA: ['', '', ''], eqB: ['', '', ''], obs: '' };
+        const diaSalvo = dadosEscalaAtual[dia - 1] || { plantao: [{},{},{}], eqA: [{},{},{}], eqB: [{},{},{}], obs: '' };
+
+        const p = diaSalvo.plantao || [{},{},{}];
+        const eA = diaSalvo.eqA || [{},{},{}];
+        const eB = diaSalvo.eqB || [{},{},{}];
 
         const tr = document.createElement('tr');
         tr.className = rowClass;
@@ -1032,23 +1158,23 @@
           <td><strong>${diaSemanaTexto}</strong></td>
           <td>
             <div class="cell-group">
-              <select class="plantao-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[0] : '')}</select>
-              <select class="plantao-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[1] : '')}</select>
-              <select class="plantao-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.plantao ? diaSalvo.plantao[2] : '')}</select>
+              ${criarItemBoxHtml('cell-plantao', p[0])}
+              ${criarItemBoxHtml('cell-plantao', p[1])}
+              ${criarItemBoxHtml('cell-plantao', p[2])}
             </div>
           </td>
           <td class="eq-a">
             <div class="cell-group">
-              <select class="eqa-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[0] : '')}</select>
-              <select class="eqa-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[1] : '')}</select>
-              <select class="eqa-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqA ? diaSalvo.eqA[2] : '')}</select>
+              ${criarItemBoxHtml('cell-eqa', eA[0])}
+              ${criarItemBoxHtml('cell-eqa', eA[1])}
+              ${criarItemBoxHtml('cell-eqa', eA[2])}
             </div>
           </td>
           <td class="eq-b">
             <div class="cell-group">
-              <select class="eqb-1" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[0] : '')}</select>
-              <select class="eqb-2" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[1] : '')}</select>
-              <select class="eqb-3" onchange="salvarDadosTabela()">${getOptionsHtml(diaSalvo.eqB ? diaSalvo.eqB[2] : '')}</select>
+              ${criarItemBoxHtml('cell-eqb', eB[0])}
+              ${criarItemBoxHtml('cell-eqb', eB[1])}
+              ${criarItemBoxHtml('cell-eqb', eB[2])}
             </div>
           </td>
           <td>
@@ -1073,10 +1199,10 @@
 
     const linhas = document.querySelectorAll('#corpoTabela tr');
     linhas.forEach((row, index) => {
-      const p1 = row.querySelector('.plantao-1');
+      const p1Select = row.querySelector('.cell-plantao .select-nome');
       const militarIndex = index % efetivo.length;
       if (efetivo[militarIndex]) {
-        p1.value = efetivo[militarIndex];
+        p1Select.value = efetivo[militarIndex];
       }
     });
 
@@ -1089,21 +1215,37 @@
     const nomeMes = mesesNome[mes];
 
     let csvContent = `ESCALA DE SERVIÇO - ALI/BPMCHOQUE - ${nomeMes} / ${ano}\n\n`;
-    csvContent += `DIA;DIA DA SEMANA;PLANTAO 1;PLANTAO 2;PLANTAO 3;EQ A 1;EQ A 2;EQ A 3;EQ B 1;EQ B 2;EQ B 3;OBSERVACOES\n`;
+    csvContent += `DIA;DIA DA SEMANA;PLANTAO 1;TIPO;PLANTAO 2;TIPO;PLANTAO 3;TIPO;EQ A 1;TIPO;EQ A 2;TIPO;EQ A 3;TIPO;EQ B 1;TIPO;EQ B 2;TIPO;EQ B 3;TIPO;OBSERVACOES\n`;
 
     const linhas = document.querySelectorAll('#corpoTabela tr');
     linhas.forEach((row, idx) => {
       const dia = idx + 1;
       const diaSemana = row.children[1].innerText;
-      const p1 = row.querySelector('.plantao-1').value || '';
-      const p2 = row.querySelector('.plantao-2').value || '';
-      const p3 = row.querySelector('.plantao-3').value || '';
-      const eA1 = row.querySelector('.eqa-1').value || '';
-      const eA2 = row.querySelector('.eqa-2').value || '';
-      const eA3 = row.querySelector('.eqa-3').value || '';
-      const eB1 = row.querySelector('.eqb-1').value || '';
-      const eB2 = row.querySelector('.eqb-2').value || '';
-      const eB3 = row.querySelector('.eqb-3').value || '';
+
+      const getValueAndTipo = (container, index) => {
+        const item = container[index];
+        if (!item) return ';';
+        const nome = item.querySelector('.select-nome').value || '';
+        const tipo = item.querySelector('.select-tipo').value || 'ORD';
+        return `${nome};${tipo}`;
+      };
+
+      const plantaoBox = row.querySelectorAll('.cell-plantao');
+      const eABox = row.querySelectorAll('.cell-eqa');
+      const eBBox = row.querySelectorAll('.cell-eqb');
+
+      const p1 = getValueAndTipo(plantaoBox, 0);
+      const p2 = getValueAndTipo(plantaoBox, 1);
+      const p3 = getValueAndTipo(plantaoBox, 2);
+
+      const eA1 = getValueAndTipo(eABox, 0);
+      const eA2 = getValueAndTipo(eABox, 1);
+      const eA3 = getValueAndTipo(eABox, 2);
+
+      const eB1 = getValueAndTipo(eBBox, 0);
+      const eB2 = getValueAndTipo(eBBox, 1);
+      const eB3 = getValueAndTipo(eBBox, 2);
+
       const obs = (row.querySelector('.input-obs').value || '').replace(/\n/g, ' ');
 
       csvContent += `${dia};${diaSemana};${p1};${p2};${p3};${eA1};${eA2};${eA3};${eB1};${eB2};${eB3};"${obs}"\n`;
