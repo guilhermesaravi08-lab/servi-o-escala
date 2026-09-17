@@ -11,8 +11,8 @@
       --bg-glass: rgba(255, 255, 255, 0.90);
       --bg-glass-card: rgba(255, 255, 255, 0.78);
       --border-radius: 12px;
-      --eq-a-bg: rgba(147, 197, 253, 0.55);
-      --eq-b-bg: rgba(254, 240, 138, 0.55);
+      --eq-a-bg: rgba(147, 197, 253, 0.45);
+      --eq-b-bg: rgba(254, 240, 138, 0.45);
 
       /* Cores dos Tipos de Escala */
       --tipo-ord: #2563eb; /* Azul - Ordinária */
@@ -192,7 +192,6 @@
       color: #0f172a;
     }
 
-    /* PAINEL GRÁFICO DE CONTAGEM DE SERVIÇOS POR MILITAR */
     .grafico-panel {
       background: var(--bg-glass-card);
       backdrop-filter: blur(8px);
@@ -461,13 +460,20 @@
       padding: 10px 6px;
     }
 
-    .row-even { background-color: rgba(255, 255, 255, 0.9); }
-    .row-odd { background-color: rgba(248, 250, 252, 0.9); }
-    
-    .row-fds { background-color: rgba(226, 232, 240, 0.65) !important; }
-    .row-fds td:nth-child(2) { color: #dc2626; font-weight: 800; }
+    /* 🎨 CICLO DE 4 TONS DE CINZA (24x72) */
+    .row-cinza-1 { background-color: #f8fafc !important; } /* Cinza Bem Claro */
+    .row-cinza-2 { background-color: #f1f5f9 !important; } /* Cinza Claro */
+    .row-cinza-3 { background-color: #e2e8f0 !important; } /* Cinza Médio */
+    .row-cinza-4 { background-color: #cbd5e1 !important; } /* Cinza Mais Escuro */
 
-    tr:hover { background-color: #f1f5f9; }
+    /* DESTAQUE DE FINAL DE SEMANA NA COLUNA DO DIA */
+    .cell-fds {
+      color: #dc2626 !important;
+      font-weight: 800 !important;
+      background-color: rgba(239, 68, 68, 0.1) !important;
+    }
+
+    tr:hover { filter: brightness(0.96); }
 
     .eq-a { background-color: var(--eq-a-bg); }
     .eq-b { background-color: var(--eq-b-bg); }
@@ -1020,7 +1026,6 @@
     notificarSalvamento('☁️ Alteração salva!');
   }
 
-  // ATUALIZAR GRÁFICO DE BARRAS DE SERVIÇOS POR MILITAR (LIMITADO ATÉ O DIA DE CONSULTA)
   function renderizarGraficoServicos(contagemMilitar, maxServicos, diaRef) {
     const grid = document.getElementById('graficoGrid');
     const titulo = document.getElementById('tituloGrafico');
@@ -1066,14 +1071,12 @@
       valores.forEach(v => {
         contagemDia[v] = (contagemDia[v] || 0) + 1;
 
-        // Contabilizar serviços APENAS se a linha for do dia 1 até o diaRef
         if (diaLinha <= diaRef) {
           contagemMilitar[v] = (contagemMilitar[v] || 0) + 1;
           totalServicosNoMes++;
         }
       });
 
-      // Validar conflitos (mesmo militar escalado 2x no mesmo dia)
       selectsNome.forEach(s => {
         if (s.value && contagemDia[s.value] > 1) {
           s.classList.add('conflito-alerta');
@@ -1156,7 +1159,11 @@
         const diaSemanaTexto = diasSemana[diaSemanaNum];
         const isFds = (diaSemanaNum === 0 || diaSemanaNum === 6);
         
-        const rowClass = isFds ? 'row-fds' : (dia % 2 === 0 ? 'row-odd' : 'row-even');
+        // Aplicação da Gradação de 4 tons de cinza (Ciclo 24x72)
+        const cicloTomIndex = ((dia - 1) % 4) + 1;
+        const rowClass = `row-cinza-${cicloTomIndex}`;
+        const fdsClass = isFds ? 'cell-fds' : '';
+
         const diaSalvo = dadosEscalaAtual[dia - 1] || { plantao: [{},{},{}], eqA: [{},{},{}], eqB: [{},{},{}], obs: '' };
 
         const p = diaSalvo.plantao || [{},{},{}];
@@ -1168,7 +1175,7 @@
 
         tr.innerHTML = `
           <td><strong>${dia}.</strong></td>
-          <td><strong>${diaSemanaTexto}</strong></td>
+          <td class="${fdsClass}"><strong>${diaSemanaTexto}</strong></td>
           <td>
             <div class="cell-group">
               ${criarItemBoxHtml('cell-plantao', p[0])}
