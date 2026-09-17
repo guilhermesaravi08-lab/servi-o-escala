@@ -192,7 +192,7 @@
       color: #0f172a;
     }
 
-    /* PAINEL GRÁFICO DE CONTAGEM DE SERVIÇOS DO EFETIVO */
+    /* PAINEL GRÁFICO DE CONTAGEM DE SERVIÇOS POR MILITAR */
     .grafico-panel {
       background: var(--bg-glass-card);
       backdrop-filter: blur(8px);
@@ -472,7 +472,6 @@
     .eq-a { background-color: var(--eq-a-bg); }
     .eq-b { background-color: var(--eq-b-bg); }
 
-    /* ESTILO DA CÉLULA COM SELECT DO NOME + TIPO DE ESCALA */
     .cell-group {
       display: flex;
       flex-direction: column;
@@ -506,7 +505,6 @@
       border: 1px solid #cbd5e1;
     }
 
-    /* CORES VISUAIS DO TIPO DE ESCALA NA TABELA */
     .tipo-ORD { background-color: #dbeafe !important; color: var(--tipo-ord) !important; border-color: var(--tipo-ord) !important; }
     .tipo-EXT { background-color: #ffedd5 !important; color: var(--tipo-ext) !important; border-color: var(--tipo-ext) !important; }
     .tipo-PRT { background-color: #dcfce7 !important; color: var(--tipo-prt) !important; border-color: var(--tipo-prt) !important; }
@@ -595,18 +593,18 @@
     <!-- PAINEL DE ESTATÍSTICAS / INDICADORES -->
     <div class="stats-container">
       <div class="stat-card">
-        <div class="stat-title">Total de Serviços no Mês</div>
+        <div class="stat-title">Total de Serviços Acumulados no Mês</div>
         <div class="stat-value" id="statTotalPlantoes">0</div>
       </div>
       <div class="stat-card">
-        <div class="stat-title">Alertas de Conflito</div>
+        <div class="stat-title">Alertas de Conflito no Mês</div>
         <div class="stat-value" id="statConflitos" style="color: #ef4444;">0</div>
       </div>
     </div>
 
     <!-- PAINEL GRÁFICO DE CONTAGEM DE SERVIÇOS POR MILITAR -->
     <div class="grafico-panel">
-      <h3>📊 Contagem de Serviços por Militar no Mês</h3>
+      <h3 id="tituloGrafico">📊 Contagem de Serviços por Militar</h3>
       <div class="grafico-grid" id="graficoGrid">
         <!-- Renderizado via JS -->
       </div>
@@ -647,8 +645,8 @@
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <h3>2. Nível de Descanso (Apenas Militares PRONTOS)</h3>
         <div class="control-group" style="font-size: 12px;">
-          <label for="diaConsulta" style="font-size: 12px;">Consulta p/ Dia do Mês:</label>
-          <input type="number" id="diaConsulta" min="1" max="31" value="1" style="width: 65px; padding: 4px 8px;" onchange="atualizarStatusEfetivo()">
+          <label for="diaConsulta" style="font-size: 12px; font-weight: 700; color: #2563eb;">📅 Consulta/Referência p/ Dia do Mês:</label>
+          <input type="number" id="diaConsulta" min="1" max="31" value="1" style="width: 65px; padding: 4px 8px;" onchange="aoMudarDiaConsulta()">
         </div>
       </div>
 
@@ -883,6 +881,11 @@
     notificarSalvamento('☁️ Situação administrativa atualizada!');
   }
 
+  function aoMudarDiaConsulta() {
+    atualizarStatusEfetivo();
+    validarConflitosEAtualizarStats();
+  }
+
   function atualizarStatusEfetivo() {
     const gridAdmin = document.getElementById('statusAdministrativoGrid');
     const gridDescanso = document.getElementById('statusDescansoGrid');
@@ -962,7 +965,7 @@
           descDescanso = `🟢 Pronto / 100% Descansado`;
         } else {
           cssDescanso = 'st-sem-dados';
-          descDescanso = `⚪ Sem registro no mês`;
+          descDescanso = `⚪ Sem registro até o dia ${diaRef}`;
         }
 
         gridDescanso.innerHTML += `
@@ -1017,9 +1020,13 @@
     notificarSalvamento('☁️ Alteração salva!');
   }
 
-  // ATUALIZAR GRÁFICO DE BARRAS DE SERVIÇOS POR MILITAR
-  function renderizarGraficoServicos(contagemMilitar, maxServicos) {
+  // ATUALIZAR GRÁFICO DE BARRAS DE SERVIÇOS POR MILITAR (LIMITADO ATÉ O DIA DE CONSULTA)
+  function renderizarGraficoServicos(contagemMilitar, maxServicos, diaRef) {
     const grid = document.getElementById('graficoGrid');
+    const titulo = document.getElementById('tituloGrafico');
+    if (!grid) return;
+    
+    titulo.innerText = `📊 Contagem de Serviços por Militar no Mês (Até o Dia ${diaRef})`;
     grid.innerHTML = '';
 
     efetivo.forEach(m => {
@@ -1045,9 +1052,11 @@
     let contagemMilitar = {};
     let totalConflitos = 0;
 
+    const diaRef = parseInt(document.getElementById('diaConsulta').value) || 31;
     const linhas = document.querySelectorAll('#corpoTabela tr');
 
-    linhas.forEach(row => {
+    linhas.forEach((row, idx) => {
+      const diaLinha = idx + 1;
       const selectsNome = row.querySelectorAll('.select-nome');
       const valores = Array.from(selectsNome).map(s => s.value).filter(Boolean);
 
@@ -1056,10 +1065,15 @@
       const contagemDia = {};
       valores.forEach(v => {
         contagemDia[v] = (contagemDia[v] || 0) + 1;
-        contagemMilitar[v] = (contagemMilitar[v] || 0) + 1;
-        totalServicosNoMes++;
+
+        // Contabilizar serviços APENAS se a linha for do dia 1 até o diaRef
+        if (diaLinha <= diaRef) {
+          contagemMilitar[v] = (contagemMilitar[v] || 0) + 1;
+          totalServicosNoMes++;
+        }
       });
 
+      // Validar conflitos (mesmo militar escalado 2x no mesmo dia)
       selectsNome.forEach(s => {
         if (s.value && contagemDia[s.value] > 1) {
           s.classList.add('conflito-alerta');
@@ -1071,13 +1085,12 @@
     document.getElementById('statTotalPlantoes').innerText = totalServicosNoMes;
     document.getElementById('statConflitos').innerText = totalConflitos;
 
-    // Calcular o máximo de serviços para proporcionalidade das barras
     let maxServicos = 0;
     for (let m in contagemMilitar) {
       if (contagemMilitar[m] > maxServicos) maxServicos = contagemMilitar[m];
     }
 
-    renderizarGraficoServicos(contagemMilitar, maxServicos);
+    renderizarGraficoServicos(contagemMilitar, maxServicos, diaRef);
   }
 
   function destacarMilitarNaTabela() {
