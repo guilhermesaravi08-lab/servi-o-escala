@@ -47,6 +47,10 @@
 
     * { box-sizing: border-box; }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       margin: 0;
@@ -437,6 +441,17 @@
       box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
     }
 
+    .btn-hoje {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.4);
+    }
+    .btn-hoje:hover {
+      background: linear-gradient(135deg, #0369a1, #0284c7);
+      box-shadow: 0 6px 18px rgba(56, 189, 248, 0.5);
+    }
+
     .btn-success { 
       background-color: #10b981; 
       box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
@@ -557,6 +572,27 @@
       background-color: #475569 !important; 
       border-left: 4px solid #f472b6;
     } 
+
+    /* 🎯 ESTILO PARA DESTAQUE DO DIA ATUAL */
+    .row-dia-hoje {
+      background-color: rgba(56, 189, 248, 0.25) !important;
+      border-left: 6px solid #38bdf8 !important;
+      outline: 2px solid #38bdf8;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+      position: relative;
+    }
+
+    .tag-hoje {
+      display: inline-block;
+      background: #38bdf8;
+      color: #020617;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 2px 4px;
+      border-radius: 4px;
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
 
     .cell-fds {
       color: #f87171 !important;
@@ -806,7 +842,7 @@
           <option value="6">Julho</option>
           <option value="7">Agosto</option>
           <option value="8">Setembro</option>
-          <option value="9" selected>Outubro</option>
+          <option value="9">Outubro</option>
           <option value="10">Novembro</option>
           <option value="11">Dezembro</option>
         </select>
@@ -824,6 +860,7 @@
       </div>
 
       <div class="control-group">
+        <button class="btn-hoje" onclick="irParaDiaHoje()">🎯 Ir para o Dia de Hoje</button>
         <button class="btn-success" onclick="preencherEscalaAutomática()">Auto-Preencher (24x72)</button>
         <button class="btn-excel" onclick="exportarExcel()">📊 Exportar p/ Excel</button>
         <button onclick="window.print()">🖨️ Imprimir / PDF</button>
@@ -850,10 +887,10 @@
       <table id="tabelaEscala">
         <thead>
           <tr>
-            <th colspan="6" class="header-mes" id="tituloMes">OUTUBRO 2026 (MÊS REFERÊNCIA)</th>
+            <th colspan="6" class="header-mes" id="tituloMes">MÊS REFERÊNCIA</th>
           </tr>
           <tr>
-            <th style="width: 40px;">OR</th>
+            <th style="width: 45px;">OR</th>
             <th style="width: 50px;">DIA</th>
             <th style="width: 340px;">PLANTÃO (4 Militares)</th>
             <th style="width: 340px;">EQ A (4 Militares)</th>
@@ -871,10 +908,10 @@
       <table id="tabelaEscalaSubsequente">
         <thead>
           <tr>
-            <th colspan="6" class="header-mes-sub" id="tituloMesSubsequente">NOVEMBRO 2026 (MÊS SUBSEQUENTE)</th>
+            <th colspan="6" class="header-mes-sub" id="tituloMesSubsequente">MÊS SUBSEQUENTE</th>
           </tr>
           <tr>
-            <th style="width: 40px;">OR</th>
+            <th style="width: 45px;">OR</th>
             <th style="width: 50px;">DIA</th>
             <th style="width: 340px;">PLANTÃO (4 Militares)</th>
             <th style="width: 340px;">EQ A (4 Militares)</th>
@@ -925,8 +962,10 @@
       document.getElementById('loginWrapper').style.display = 'none';
       document.getElementById('appContent').style.display = 'block';
       
-      const hoje = new Date().getDate();
-      document.getElementById('diaConsulta').value = hoje;
+      const hojeData = new Date();
+      document.getElementById('diaConsulta').value = hojeData.getDate();
+      document.getElementById('mes').value = hojeData.getMonth();
+      document.getElementById('ano').value = hojeData.getFullYear();
       
       iniciarEscala();
     } else {
@@ -1346,6 +1385,11 @@
     const corpo = document.getElementById(elementCorpoId);
     corpo.innerHTML = '';
 
+    const hoje = new Date();
+    const hojeDia = hoje.getDate();
+    const hojeMes = hoje.getMonth();
+    const hojeAno = hoje.getFullYear();
+
     for (let dia = 1; dia <= totalDias; dia++) {
       const dataObj = new Date(anoNum, mesNum, dia);
       const diaSemanaNum = dataObj.getDay();
@@ -1353,8 +1397,13 @@
       const isFds = (diaSemanaNum === 0 || diaSemanaNum === 6);
       
       const cicloTomIndex = ((dia - 1) % 4) + 1;
-      const rowClass = `row-cinza-${cicloTomIndex}`;
+      let rowClass = `row-cinza-${cicloTomIndex}`;
       const fdsClass = isFds ? 'cell-fds' : '';
+
+      const isHoje = (dia === hojeDia && mesNum === hojeMes && anoNum === hojeAno);
+      if (isHoje && elementCorpoId === 'corpoTabela') {
+        rowClass += ' row-dia-hoje';
+      }
 
       const diaSalvo = dadosEscala[dia - 1] || { plantao: [{},{},{},{}], eqA: [{},{},{},{}], eqB: [{},{},{},{}], obs: '' };
 
@@ -1364,10 +1413,16 @@
 
       const tr = document.createElement('tr');
       tr.className = rowClass;
+      if (isHoje && elementCorpoId === 'corpoTabela') {
+        tr.id = 'linhaDiaHoje';
+      }
 
       tr.innerHTML = `
         <td><strong>${dia}.</strong></td>
-        <td class="${fdsClass}"><strong>${diaSemanaTexto}</strong></td>
+        <td class="${fdsClass}">
+          <strong>${diaSemanaTexto}</strong>
+          ${isHoje && elementCorpoId === 'corpoTabela' ? '<br><span class="tag-hoje">📍 HOJE</span>' : ''}
+        </td>
         <td>
           <div class="cell-group">
             ${criarItemBoxHtml('cell-plantao', p[0])}
@@ -1398,6 +1453,34 @@
       `;
 
       corpo.appendChild(tr);
+    }
+  }
+
+  function irParaDiaHoje() {
+    const hoje = new Date();
+    const mesSel = parseInt(document.getElementById('mes').value);
+    const anoSel = parseInt(document.getElementById('ano').value);
+
+    if (mesSel !== hoje.getMonth() || anoSel !== hoje.getFullYear()) {
+      if (confirm(`A sua escala atual está exibindo ${mesesNome[mesSel]}/${anoSel}. Deseja mudar para o mês atual (${mesesNome[hoje.getMonth()]}/${hoje.getFullYear()}) para ver o dia de hoje?`)) {
+        document.getElementById('mes').value = hoje.getMonth();
+        document.getElementById('ano').value = hoje.getFullYear();
+        document.getElementById('diaConsulta').value = hoje.getDate();
+        carregarEscala();
+        setTimeout(executarRolagemParaHoje, 400);
+      }
+      return;
+    }
+
+    executarRolagemParaHoje();
+  }
+
+  function executarRolagemParaHoje() {
+    const linhaHoje = document.getElementById('linhaDiaHoje');
+    if (linhaHoje) {
+      linhaHoje.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      alert("A linha do dia de hoje não foi encontrada na tabela atual.");
     }
   }
 
@@ -1471,7 +1554,7 @@
     const linhas = document.querySelectorAll('#corpoTabela tr');
     linhas.forEach((row, idx) => {
       const dia = idx + 1;
-      const diaSemana = row.children[1].innerText;
+      const diaSemana = row.children[1].innerText.replace('📍 HOJE', '').trim();
 
       const getValueTipoSt = (container, index) => {
         const item = container[index];
