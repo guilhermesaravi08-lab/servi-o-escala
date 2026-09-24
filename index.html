@@ -22,7 +22,13 @@
       --tipo-ext: #f97316;
       --tipo-prt: #22c55e;
 
-      /* Status de Afastamento */
+      /* Status do Serviço do Dia */
+      --st-srv-nor: #22c55e;
+      --st-srv-per: #eab308;
+      --st-srv-dis: #38bdf8;
+      --st-srv-aft: #ef4444;
+
+      /* Status de Afastamento Administrativo */
       --status-pronto: #16a34a;          
       --status-licenca-medica: #0f172a; 
       --status-ferias: #ea580c;         
@@ -133,7 +139,7 @@
     .app-content { display: none; }
 
     .container {
-      max-width: 1550px;
+      max-width: 1600px;
       margin: 0 auto;
       background: var(--bg-glass);
       backdrop-filter: blur(16px);
@@ -563,8 +569,11 @@
 
     .militar-item-box {
       display: flex;
-      gap: 4px;
+      gap: 3px;
       align-items: center;
+      transition: all 0.2s ease;
+      border-radius: 6px;
+      padding: 1px;
     }
 
     .militar-item-box select.select-nome {
@@ -574,18 +583,44 @@
       color: #f8fafc;
       text-align: center;
       font-size: 11px;
-      padding: 4px;
+      padding: 4px 2px;
       border-radius: 6px;
     }
 
     .militar-item-box select.select-tipo {
-      width: 58px;
+      width: 52px;
       font-size: 9px;
       font-weight: 800;
       padding: 4px 1px;
       border-radius: 6px;
       text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .militar-item-box select.select-status-servico {
+      width: 48px;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 4px 1px;
+      border-radius: 6px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+    }
+
+    /* ESTILOS VISUAIS PARA STATUS DE SERVIÇO DO DIA */
+    .st-srv-NOR { background-color: rgba(34, 197, 94, 0.15) !important; color: #86efac !important; border-color: var(--st-srv-nor) !important; }
+    .st-srv-PER { background-color: rgba(234, 179, 8, 0.2) !important; color: #fde047 !important; border-color: var(--st-srv-per) !important; }
+    .st-srv-DIS { background-color: rgba(56, 189, 248, 0.2) !important; color: #7dd3fc !important; border-color: var(--st-srv-dis) !important; }
+    .st-srv-AFT { background-color: rgba(239, 68, 68, 0.2) !important; color: #fca5a5 !important; border-color: var(--st-srv-aft) !important; }
+
+    /* MILITAR EM DISPENSA/FOLGA OU TROCA COMPROVADA */
+    .box-srv-DIS .select-nome {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+    .box-srv-PER .select-nome {
+      border-color: #fde047 !important;
     }
 
     .tipo-ORD { background-color: rgba(59, 130, 246, 0.2) !important; color: #93c5fd !important; border-color: var(--tipo-ord) !important; }
@@ -616,7 +651,7 @@
 
     .input-obs {
       width: 100%;
-      min-height: 85px;
+      min-height: 95px;
       resize: vertical;
       font-family: inherit;
       font-size: 11px;
@@ -686,7 +721,7 @@
 
     <!-- PAINEL GRÁFICO DE CONTAGEM DE SERVIÇOS POR MILITAR -->
     <div class="grafico-panel">
-      <h3 id="tituloGrafico">📊 Contagem de Serviços por Militar</h3>
+      <h3 id="tituloGrafico">📊 Contagem de Serviços Efetuados por Militar</h3>
       <div class="grafico-grid" id="graficoGrid">
         <!-- Renderizado via JS -->
       </div>
@@ -704,9 +739,9 @@
 
     <!-- 1. PAINEL DE SITUAÇÃO ADMINISTRATIVA (AFASTAMENTOS) -->
     <div class="status-panel">
-      <h3>1. Situação Administrativa do Efetivo (Disponibilidade)</h3>
+      <h3>1. Situação Administrativa do Efetivo (Disponibilidade Geral)</h3>
       <p style="font-size: 12px; color: #94a3b8; margin-top: -6px; margin-bottom: 14px;">
-        Clique no cartão do militar para alterar a situação dele (Pronto, Licença Médica, Férias ou Dispensa).
+        Clique no cartão do militar para alterar a situação global dele (Pronto, Licença Médica, Férias ou Dispensa).
       </p>
 
       <div class="status-grid" id="statusAdministrativoGrid">
@@ -788,6 +823,15 @@
       <textarea id="anotacoesMensaisText" class="textarea-anotacoes-mes" placeholder="Digite aqui orientações gerais, recados ou diretrizes importantes para este mês..." onblur="salvarAnotacoesMes()"></textarea>
     </div>
 
+    <!-- LEGENDA DOS STATUS PONTUAIS DO SERVIÇO -->
+    <div style="display: flex; gap: 12px; font-size: 11px; margin-bottom: 10px; color: #94a3b8; flex-wrap: wrap;">
+      <span><strong>Legenda de Marcadores de Serviço:</strong></span>
+      <span>🟢 <strong>NOR:</strong> Serviço Cumprido</span>
+      <span>🟡 <strong>PER:</strong> Permuta/Troca</span>
+      <span>🔵 <strong>DIS:</strong> Dispensa/Folga no dia</span>
+      <span>🔴 <strong>AFT:</strong> Atestado/Falta</span>
+    </div>
+
     <!-- TABELA PRINCIPAL DO MÊS DE REFERÊNCIA -->
     <div class="table-container">
       <table id="tabelaEscala">
@@ -796,12 +840,12 @@
             <th colspan="6" class="header-mes" id="tituloMes">OUTUBRO 2026 (MÊS REFERÊNCIA)</th>
           </tr>
           <tr>
-            <th style="width: 45px;">OR</th>
-            <th style="width: 55px;">DIA</th>
-            <th style="width: 320px;">PLANTÃO (4 Militares)</th>
-            <th style="width: 320px;">EQ A (4 Militares)</th>
-            <th style="width: 320px;">EQ B (4 Militares)</th>
-            <th style="width: 230px;">OBSERVAÇÕES</th>
+            <th style="width: 40px;">OR</th>
+            <th style="width: 50px;">DIA</th>
+            <th style="width: 340px;">PLANTÃO (4 Militares)</th>
+            <th style="width: 340px;">EQ A (4 Militares)</th>
+            <th style="width: 340px;">EQ B (4 Militares)</th>
+            <th style="width: 220px;">OBSERVAÇÕES</th>
           </tr>
         </thead>
         <tbody id="corpoTabela">
@@ -817,12 +861,12 @@
             <th colspan="6" class="header-mes-sub" id="tituloMesSubsequente">NOVEMBRO 2026 (MÊS SUBSEQUENTE)</th>
           </tr>
           <tr>
-            <th style="width: 45px;">OR</th>
-            <th style="width: 55px;">DIA</th>
-            <th style="width: 320px;">PLANTÃO (4 Militares)</th>
-            <th style="width: 320px;">EQ A (4 Militares)</th>
-            <th style="width: 320px;">EQ B (4 Militares)</th>
-            <th style="width: 230px;">OBSERVAÇÕES</th>
+            <th style="width: 40px;">OR</th>
+            <th style="width: 50px;">DIA</th>
+            <th style="width: 340px;">PLANTÃO (4 Militares)</th>
+            <th style="width: 340px;">EQ A (4 Militares)</th>
+            <th style="width: 340px;">EQ B (4 Militares)</th>
+            <th style="width: 220px;">OBSERVAÇÕES</th>
           </tr>
         </thead>
         <tbody id="corpoTabelaSubsequente">
@@ -1044,11 +1088,17 @@
           const diaAlvo = diaRef - i;
           if (diaAlvo >= 1 && dadosEscalaAtual[diaAlvo - 1]) {
             const row = dadosEscalaAtual[diaAlvo - 1];
+            
+            const extrairEfetivosReais = (arr) => {
+              if (!arr) return [];
+              return arr.filter(x => x.nome && (x.statusServico === 'NOR' || x.statusServico === 'PER')).map(x => x.nome);
+            };
+
             const escalados = [
-              ...(row.plantao ? row.plantao.map(x => x.nome) : []),
-              ...(row.eqA ? row.eqA.map(x => x.nome) : []),
-              ...(row.eqB ? row.eqB.map(x => x.nome) : [])
-            ].filter(Boolean);
+              ...extrairEfetivosReais(row.plantao),
+              ...extrairEfetivosReais(row.eqA),
+              ...extrairEfetivosReais(row.eqB)
+            ];
 
             if (escalados.includes(militar)) {
               diasDesdeUltimoServico = i;
@@ -1107,7 +1157,8 @@
         const selects = row.querySelectorAll('.' + className);
         return Array.from(selects).map(select => ({
           nome: select.querySelector('.select-nome').value,
-          tipo: select.querySelector('.select-tipo').value
+          tipo: select.querySelector('.select-tipo').value,
+          statusServico: select.querySelector('.select-status-servico').value || 'NOR'
         }));
       };
 
@@ -1143,7 +1194,7 @@
     const titulo = document.getElementById('tituloGrafico');
     if (!grid) return;
     
-    titulo.innerText = `📊 Contagem de Serviços por Militar no Mês (Até o Dia ${diaRef})`;
+    titulo.innerText = `📊 Contagem de Serviços Efetuados por Militar no Mês (Até o Dia ${diaRef})`;
     grid.innerHTML = '';
 
     efetivo.forEach(m => {
@@ -1174,24 +1225,39 @@
 
     linhas.forEach((row, idx) => {
       const diaLinha = idx + 1;
-      const selectsNome = row.querySelectorAll('.select-nome');
-      const valores = Array.from(selectsNome).map(s => s.value).filter(Boolean);
 
-      selectsNome.forEach(s => s.classList.remove('conflito-alerta'));
+      const processarSelectsBox = (boxes) => {
+        const resultado = [];
+        boxes.forEach(box => {
+          const nome = box.querySelector('.select-nome').value;
+          const statusSrv = box.querySelector('.select-status-servico').value;
+          if (nome) {
+            resultado.push({ nome, statusSrv, element: box.querySelector('.select-nome') });
+          }
+        });
+        return resultado;
+      };
 
-      const contagemDia = {};
-      valores.forEach(v => {
-        contagemDia[v] = (contagemDia[v] || 0) + 1;
+      const boxes = row.querySelectorAll('.militar-item-box');
+      const dadosDia = processarSelectsBox(boxes);
 
-        if (diaLinha <= diaRef) {
-          contagemMilitar[v] = (contagemMilitar[v] || 0) + 1;
-          totalServicosNoMes++;
+      dadosDia.forEach(d => d.element.classList.remove('conflito-alerta'));
+
+      const contagemApenasNormaisOuPermutas = {};
+      dadosDia.forEach(d => {
+        if (d.statusSrv === 'NOR' || d.statusSrv === 'PER') {
+          contagemApenasNormaisOuPermutas[d.nome] = (contagemApenasNormaisOuPermutas[d.nome] || 0) + 1;
+
+          if (diaLinha <= diaRef) {
+            contagemMilitar[d.nome] = (contagemMilitar[d.nome] || 0) + 1;
+            totalServicosNoMes++;
+          }
         }
       });
 
-      selectsNome.forEach(s => {
-        if (s.value && contagemDia[s.value] > 1) {
-          s.classList.add('conflito-alerta');
+      dadosDia.forEach(d => {
+        if (d.statusSrv !== 'DIS' && contagemApenasNormaisOuPermutas[d.nome] > 1) {
+          d.element.classList.add('conflito-alerta');
           totalConflitos++;
         }
       });
@@ -1227,12 +1293,23 @@
     salvarDadosTabela();
   }
 
-  function criarItemBoxHtml(className, objetoSalvo = { nome: '', tipo: 'ORD' }) {
+  function atualizarCorStatusServicoSelect(selectElement) {
+    const st = selectElement.value;
+    const boxContainer = selectElement.closest('.militar-item-box');
+    
+    selectElement.className = 'select-status-servico st-srv-' + st;
+    boxContainer.className = 'militar-item-box ' + boxContainer.dataset.cellType + ' box-srv-' + st;
+    
+    salvarDadosTabela();
+  }
+
+  function criarItemBoxHtml(className, objetoSalvo = { nome: '', tipo: 'ORD', statusServico: 'NOR' }) {
     const nomeVal = objetoSalvo.nome || (typeof objetoSalvo === 'string' ? objetoSalvo : '');
     const tipoVal = objetoSalvo.tipo || 'ORD';
+    const stSrvVal = objetoSalvo.statusServico || 'NOR';
 
     return `
-      <div class="militar-item-box ${className}">
+      <div class="militar-item-box ${className} box-srv-${stSrvVal}" data-cell-type="${className}">
         <select class="select-nome" onchange="salvarDadosTabela()">
           ${getOptionsHtml(nomeVal)}
         </select>
@@ -1240,6 +1317,12 @@
           <option value="ORD" ${tipoVal === 'ORD' ? 'selected' : ''}>ORD</option>
           <option value="EXT" ${tipoVal === 'EXT' ? 'selected' : ''}>EXT</option>
           <option value="PRT" ${tipoVal === 'PRT' ? 'selected' : ''}>PRT</option>
+        </select>
+        <select class="select-status-servico st-srv-${stSrvVal}" onchange="atualizarCorStatusServicoSelect(this)" title="Situação pontual do militar no serviço do dia">
+          <option value="NOR" ${stSrvVal === 'NOR' ? 'selected' : ''}>NOR</option>
+          <option value="PER" ${stSrvVal === 'PER' ? 'selected' : ''}>PER</option>
+          <option value="DIS" ${stSrvVal === 'DIS' ? 'selected' : ''}>DIS</option>
+          <option value="AFT" ${stSrvVal === 'AFT' ? 'selected' : ''}>AFT</option>
         </select>
       </div>
     `;
@@ -1297,7 +1380,7 @@
           </div>
         </td>
         <td>
-          <textarea class="input-obs" onblur="salvarDadosTabela()">${diaSalvo.obs || ''}</textarea>
+          <textarea class="input-obs" onblur="salvarDadosTabela()" placeholder="Ex: Cb Silva dispensado / Permuta com Sd Oliveira...">${diaSalvo.obs || ''}</textarea>
         </td>
       `;
 
@@ -1370,39 +1453,40 @@
     const nomeMes = mesesNome[mes];
 
     let csvContent = `ESCALA DE SERVIÇO - ALI/BPMCHOQUE - ${nomeMes} / ${ano}\n\n`;
-    csvContent += `DIA;DIA DA SEMANA;PLANTAO 1;TIPO;PLANTAO 2;TIPO;PLANTAO 3;TIPO;PLANTAO 4;TIPO;EQ A 1;TIPO;EQ A 2;TIPO;EQ A 3;TIPO;EQ A 4;TIPO;EQ B 1;TIPO;EQ B 2;TIPO;EQ B 3;TIPO;EQ B 4;TIPO;OBSERVACOES\n`;
+    csvContent += `DIA;DIA DA SEMANA;PLANTAO 1;TIPO;ST;PLANTAO 2;TIPO;ST;PLANTAO 3;TIPO;ST;PLANTAO 4;TIPO;ST;EQ A 1;TIPO;ST;EQ A 2;TIPO;ST;EQ A 3;TIPO;ST;EQ A 4;TIPO;ST;EQ B 1;TIPO;ST;EQ B 2;TIPO;ST;EQ B 3;TIPO;ST;EQ B 4;TIPO;ST;OBSERVACOES\n`;
 
     const linhas = document.querySelectorAll('#corpoTabela tr');
     linhas.forEach((row, idx) => {
       const dia = idx + 1;
       const diaSemana = row.children[1].innerText;
 
-      const getValueAndTipo = (container, index) => {
+      const getValueTipoSt = (container, index) => {
         const item = container[index];
-        if (!item) return ';';
+        if (!item) return ';;';
         const nome = item.querySelector('.select-nome').value || '';
         const tipo = item.querySelector('.select-tipo').value || 'ORD';
-        return `${nome};${tipo}`;
+        const st = item.querySelector('.select-status-servico').value || 'NOR';
+        return `${nome};${tipo};${st}`;
       };
 
       const plantaoBox = row.querySelectorAll('.cell-plantao');
       const eABox = row.querySelectorAll('.cell-eqa');
       const eBBox = row.querySelectorAll('.cell-eqb');
 
-      const p1 = getValueAndTipo(plantaoBox, 0);
-      const p2 = getValueAndTipo(plantaoBox, 1);
-      const p3 = getValueAndTipo(plantaoBox, 2);
-      const p4 = getValueAndTipo(plantaoBox, 3);
+      const p1 = getValueTipoSt(plantaoBox, 0);
+      const p2 = getValueTipoSt(plantaoBox, 1);
+      const p3 = getValueTipoSt(plantaoBox, 2);
+      const p4 = getValueTipoSt(plantaoBox, 3);
 
-      const eA1 = getValueAndTipo(eABox, 0);
-      const eA2 = getValueAndTipo(eABox, 1);
-      const eA3 = getValueAndTipo(eABox, 2);
-      const eA4 = getValueAndTipo(eABox, 3);
+      const eA1 = getValueTipoSt(eABox, 0);
+      const eA2 = getValueTipoSt(eABox, 1);
+      const eA3 = getValueTipoSt(eABox, 2);
+      const eA4 = getValueTipoSt(eABox, 3);
 
-      const eB1 = getValueAndTipo(eBBox, 0);
-      const eB2 = getValueAndTipo(eBBox, 1);
-      const eB3 = getValueAndTipo(eBBox, 2);
-      const eB4 = getValueAndTipo(eBBox, 3);
+      const eB1 = getValueTipoSt(eBBox, 0);
+      const eB2 = getValueTipoSt(eBBox, 1);
+      const eB3 = getValueTipoSt(eBBox, 2);
+      const eB4 = getValueTipoSt(eBBox, 3);
 
       const obs = (row.querySelector('.input-obs').value || '').replace(/\n/g, ' ');
 
