@@ -4,29 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Escala ALI/BPMCHOQUE 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #0f172a;
+      --primary-color: #020617;
       --accent-color: #3b82f6;
       --accent-hover: #2563eb;
-      --bg-glass: rgba(15, 23, 42, 0.75);
-      --bg-glass-card: rgba(30, 41, 59, 0.70);
+      --bg-glass: rgba(15, 23, 42, 0.82);
+      --bg-glass-card: rgba(30, 41, 59, 0.75);
       --border-card: rgba(255, 255, 255, 0.12);
-      --border-radius: 16px;
+      --border-radius: 18px;
       
-      --eq-a-bg: rgba(59, 130, 246, 0.18);
-      --eq-b-bg: rgba(234, 179, 8, 0.18);
+      --eq-a-bg: rgba(59, 130, 246, 0.15);
+      --eq-b-bg: rgba(234, 179, 8, 0.15);
 
       /* Tipos de Escala */
-      --tipo-ord: #3b82f6;
-      --tipo-ext: #f97316;
-      --tipo-prt: #22c55e;
+      --tipo-ord: #60a5fa;
+      --tipo-ext: #fb923c;
+      --tipo-prt: #4ade80;
 
       /* Status do Serviço do Dia */
-      --st-srv-nor: #22c55e;
-      --st-srv-per: #eab308;
+      --st-srv-nor: #4ade80;
+      --st-srv-per: #facc15;
       --st-srv-dis: #38bdf8;
-      --st-srv-aft: #ef4444;
+      --st-srv-aft: #f87171;
 
       /* Status de Afastamento Administrativo */
       --status-pronto: #16a34a;          
@@ -45,7 +48,7 @@
     * { box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       margin: 0;
       padding: 30px 20px 40px 190px;
       min-height: 100vh;
@@ -59,13 +62,13 @@
       position: fixed;
       top: 25px;
       left: 25px;
-      width: 130px;
-      height: 130px;
+      width: 135px;
+      height: 135px;
       background: url('brasao.png') no-repeat center center;
       background-size: contain;
       z-index: 1000;
       pointer-events: none;
-      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.6));
+      filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.7));
     }
 
     .login-wrapper {
@@ -74,8 +77,8 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(2, 6, 23, 0.85);
-      backdrop-filter: blur(16px);
+      background: rgba(2, 6, 23, 0.90);
+      backdrop-filter: blur(20px);
       z-index: 2000;
       display: flex;
       align-items: center;
@@ -83,15 +86,15 @@
     }
 
     .login-card {
-      background: rgba(30, 41, 59, 0.85);
+      background: rgba(30, 41, 59, 0.90);
       padding: 45px 35px;
       border-radius: 24px;
       width: 100%;
       max-width: 420px;
       text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
       border: 1px solid var(--border-card);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
     }
 
     .login-card h2 {
@@ -110,7 +113,7 @@
       padding: 14px 16px;
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, 0.8);
       color: #fff;
       font-size: 15px;
       outline: none;
@@ -119,7 +122,7 @@
 
     .login-card input:focus {
       border-color: var(--accent-color);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
     }
 
     .login-card button {
@@ -139,15 +142,15 @@
     .app-content { display: none; }
 
     .container {
-      max-width: 1600px;
+      max-width: 1650px;
       margin: 0 auto;
       background: var(--bg-glass);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border-card);
       padding: 35px;
       border-radius: 24px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
     }
 
     .header-bar {
@@ -166,7 +169,7 @@
       text-transform: uppercase;
       font-size: 26px;
       flex-grow: 1;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
     }
 
     .btn-logout {
@@ -204,7 +207,7 @@
       border: 1px solid var(--border-card);
       padding: 18px 20px;
       border-radius: var(--border-radius);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
       display: flex;
       flex-direction: column;
       transition: transform 0.2s ease;
@@ -228,12 +231,12 @@
 
     .grafico-panel, .efetivo-section, .controls, .painel-anotacoes-mes, .status-panel {
       background: var(--bg-glass-card);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--border-card);
       padding: 22px 26px;
       border-radius: var(--border-radius);
       margin-bottom: 24px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
     }
 
     .efetivo-section h3, .painel-anotacoes-mes h3, .status-panel h3, .grafico-panel h3 {
@@ -254,7 +257,7 @@
     }
 
     .grafico-bar-item {
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, 0.7);
       padding: 10px 14px;
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -302,14 +305,14 @@
       flex-direction: column;
       justify-content: space-between;
       min-height: 70px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       transition: all 0.2s ease;
       cursor: pointer;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .status-card:hover { 
       transform: translateY(-3px); 
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
 
     .status-card .militar-nome {
@@ -353,7 +356,7 @@
       width: 14px;
       height: 14px;
       border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
     .textarea-anotacoes-mes {
@@ -397,18 +400,26 @@
 
     input, select, button {
       padding: 10px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 10px;
       font-size: 14px;
       outline: none;
       transition: all 0.2s ease;
-      background: rgba(15, 23, 42, 0.7);
+      background: #0f172a;
       color: #f8fafc;
+    }
+
+    /* 🎯 AJUSTE DE ALTO CONTRASTE PARA MENUS SUSPENSOS (<SELECT> E <OPTION>) */
+    select option {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+      font-weight: 600 !important;
+      padding: 8px 12px;
     }
 
     input:focus, select:focus {
       border-color: var(--accent-color);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
     }
 
     button {
@@ -452,16 +463,16 @@
     }
 
     .militar-tag {
-      background: rgba(30, 41, 59, 0.8);
+      background: rgba(30, 41, 59, 0.9);
       padding: 6px 14px;
       border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       font-size: 13px;
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
     .militar-tag span {
@@ -474,7 +485,7 @@
     .table-container {
       overflow-x: auto;
       border-radius: var(--border-radius);
-      box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
       border: 1px solid var(--border-card);
       margin-bottom: 30px;
     }
@@ -520,7 +531,7 @@
     }
 
     th {
-      background: rgba(30, 41, 59, 0.9);
+      background: rgba(30, 41, 59, 0.95);
       color: #94a3b8;
       font-weight: 700;
       padding: 12px 6px;
@@ -529,7 +540,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* CICLO DE 4 TONS VISUAIS */
+    /* CICLO DE 4 TONS VISUAIS COM BORDA DE DESTAQUE */
     .row-cinza-1 { 
       background-color: #0f172a !important; 
       border-left: 4px solid #38bdf8;
@@ -563,7 +574,7 @@
     .cell-group {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
       padding: 2px;
     }
 
@@ -573,48 +584,54 @@
       align-items: center;
       transition: all 0.2s ease;
       border-radius: 6px;
-      padding: 1px;
+      padding: 2px;
     }
 
+    /* ESTILIZAÇÃO ESPECÍFICA DE SELECTS DA TABELA DE ESCALA */
     .militar-item-box select.select-nome {
       flex-grow: 1;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: #0f172a;
       color: #f8fafc;
       text-align: center;
       font-size: 11px;
-      padding: 4px 2px;
+      font-weight: 600;
+      padding: 5px 3px;
       border-radius: 6px;
     }
 
     .militar-item-box select.select-tipo {
-      width: 52px;
-      font-size: 9px;
+      width: 55px;
+      font-size: 10px;
       font-weight: 800;
-      padding: 4px 1px;
+      padding: 5px 1px;
       border-radius: 6px;
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .militar-item-box select.select-status-servico {
-      width: 48px;
-      font-size: 9px;
+      width: 50px;
+      font-size: 10px;
       font-weight: 800;
-      padding: 4px 1px;
+      padding: 5px 1px;
       border-radius: 6px;
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       cursor: pointer;
     }
 
-    /* ESTILOS VISUAIS PARA STATUS DE SERVIÇO DO DIA */
-    .st-srv-NOR { background-color: rgba(34, 197, 94, 0.15) !important; color: #86efac !important; border-color: var(--st-srv-nor) !important; }
-    .st-srv-PER { background-color: rgba(234, 179, 8, 0.2) !important; color: #fde047 !important; border-color: var(--st-srv-per) !important; }
-    .st-srv-DIS { background-color: rgba(56, 189, 248, 0.2) !important; color: #7dd3fc !important; border-color: var(--st-srv-dis) !important; }
-    .st-srv-AFT { background-color: rgba(239, 68, 68, 0.2) !important; color: #fca5a5 !important; border-color: var(--st-srv-aft) !important; }
+    /* CORES DE ALTO CONTRASTE PARA TIPOS DE ESCALA */
+    .tipo-ORD { background-color: #1e3a8a !important; color: #93c5fd !important; border-color: #3b82f6 !important; }
+    .tipo-EXT { background-color: #7c2d12 !important; color: #fdba74 !important; border-color: #f97316 !important; }
+    .tipo-PRT { background-color: #14532d !important; color: #86efac !important; border-color: #22c55e !important; }
 
-    /* MILITAR EM DISPENSA/FOLGA OU TROCA COMPROVADA */
+    /* CORES DE ALTO CONTRASTE PARA STATUS DO SERVIÇO DO DIA */
+    .st-srv-NOR { background-color: #14532d !important; color: #86efac !important; border-color: #22c55e !important; }
+    .st-srv-PER { background-color: #713f12 !important; color: #fde047 !important; border-color: #eab308 !important; }
+    .st-srv-DIS { background-color: #075985 !important; color: #7dd3fc !important; border-color: #38bdf8 !important; }
+    .st-srv-AFT { background-color: #7f1d1d !important; color: #fca5a5 !important; border-color: #ef4444 !important; }
+
     .box-srv-DIS .select-nome {
       text-decoration: line-through;
       opacity: 0.6;
@@ -622,10 +639,6 @@
     .box-srv-PER .select-nome {
       border-color: #fde047 !important;
     }
-
-    .tipo-ORD { background-color: rgba(59, 130, 246, 0.2) !important; color: #93c5fd !important; border-color: var(--tipo-ord) !important; }
-    .tipo-EXT { background-color: rgba(249, 115, 22, 0.2) !important; color: #fdba74 !important; border-color: var(--tipo-ext) !important; }
-    .tipo-PRT { background-color: rgba(34, 197, 94, 0.2) !important; color: #86efac !important; border-color: var(--tipo-prt) !important; }
 
     .highlight-militar {
       background-color: #22c55e !important;
@@ -824,7 +837,7 @@
     </div>
 
     <!-- LEGENDA DOS STATUS PONTUAIS DO SERVIÇO -->
-    <div style="display: flex; gap: 12px; font-size: 11px; margin-bottom: 10px; color: #94a3b8; flex-wrap: wrap;">
+    <div style="display: flex; gap: 14px; font-size: 12px; margin-bottom: 12px; color: #cbd5e1; flex-wrap: wrap; background: rgba(30, 41, 59, 0.6); padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
       <span><strong>Legenda de Marcadores de Serviço:</strong></span>
       <span>🟢 <strong>NOR:</strong> Serviço Cumprido</span>
       <span>🟡 <strong>PER:</strong> Permuta/Troca</span>
