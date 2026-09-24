@@ -133,7 +133,7 @@
     .app-content { display: none; }
 
     .container {
-      max-width: 1450px;
+      max-width: 1550px;
       margin: 0 auto;
       background: var(--bg-glass);
       backdrop-filter: blur(16px);
@@ -470,6 +470,7 @@
       border-radius: var(--border-radius);
       box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.4);
       border: 1px solid var(--border-card);
+      margin-bottom: 30px;
     }
 
     table {
@@ -483,8 +484,8 @@
     th, td {
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       border-right: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 8px;
-      font-size: 13px;
+      padding: 6px;
+      font-size: 12px;
       vertical-align: middle;
     }
 
@@ -501,17 +502,28 @@
       border: none;
     }
 
+    .header-mes-sub {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 16px;
+      border: none;
+    }
+
     th {
       background: rgba(30, 41, 59, 0.9);
       color: #94a3b8;
       font-weight: 700;
-      padding: 12px 8px;
+      padding: 12px 6px;
       text-transform: uppercase;
-      font-size: 12px;
+      font-size: 11px;
       letter-spacing: 0.5px;
     }
 
-    /* 🎨 DESTACADAS COM MAIOR CONTRASTE VISUAL NO CICLO DE 4 DIAS */
+    /* CICLO DE 4 TONS VISUAIS */
     .row-cinza-1 { 
       background-color: #0f172a !important; 
       border-left: 4px solid #38bdf8;
@@ -545,13 +557,13 @@
     .cell-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      padding: 3px;
+      gap: 4px;
+      padding: 2px;
     }
 
     .militar-item-box {
       display: flex;
-      gap: 5px;
+      gap: 4px;
       align-items: center;
     }
 
@@ -561,17 +573,17 @@
       background: rgba(15, 23, 42, 0.85);
       color: #f8fafc;
       text-align: center;
-      font-size: 12px;
-      padding: 5px;
-      border-radius: 8px;
+      font-size: 11px;
+      padding: 4px;
+      border-radius: 6px;
     }
 
     .militar-item-box select.select-tipo {
-      width: 65px;
-      font-size: 10px;
+      width: 58px;
+      font-size: 9px;
       font-weight: 800;
-      padding: 5px 2px;
-      border-radius: 8px;
+      padding: 4px 1px;
+      border-radius: 6px;
       text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
@@ -604,14 +616,14 @@
 
     .input-obs {
       width: 100%;
-      min-height: 65px;
+      min-height: 85px;
       resize: vertical;
       font-family: inherit;
-      font-size: 12px;
-      padding: 6px 8px;
+      font-size: 11px;
+      padding: 6px;
       border: 1px solid rgba(250, 204, 21, 0.3);
       background-color: rgba(254, 240, 138, 0.05);
-      line-height: 18px;
+      line-height: 16px;
       border-radius: 8px;
       color: #fef08a;
       outline: none;
@@ -663,11 +675,11 @@
     <!-- PAINEL DE ESTATÍSTICAS / INDICADORES -->
     <div class="stats-container">
       <div class="stat-card">
-        <div class="stat-title">Total de Serviços Acumulados no Mês</div>
+        <div class="stat-title">Total de Serviços Acumulados no Mês Referência</div>
         <div class="stat-value" id="statTotalPlantoes">0</div>
       </div>
       <div class="stat-card">
-        <div class="stat-title">Alertas de Conflito no Mês</div>
+        <div class="stat-title">Alertas de Conflito no Mês Referência</div>
         <div class="stat-value" id="statConflitos" style="color: #f87171;">0</div>
       </div>
     </div>
@@ -735,7 +747,7 @@
     <!-- CONTROLES MENSAL & FILTROS -->
     <div class="controls">
       <div class="control-group">
-        <label for="mes">Mês:</label>
+        <label for="mes">Mês Referência:</label>
         <select id="mes" onchange="carregarEscala()">
           <option value="0">Janeiro</option>
           <option value="1">Fevereiro</option>
@@ -772,30 +784,52 @@
 
     <!-- PAINEL DE ANOTAÇÕES MENSAL -->
     <div class="painel-anotacoes-mes">
-      <h3 id="tituloAnotacoesMes">Anotações Gerais do Mês</h3>
+      <h3 id="tituloAnotacoesMes">Anotações Gerais do Mês Referência</h3>
       <textarea id="anotacoesMensaisText" class="textarea-anotacoes-mes" placeholder="Digite aqui orientações gerais, recados ou diretrizes importantes para este mês..." onblur="salvarAnotacoesMes()"></textarea>
     </div>
 
-    <!-- TABELA PRINCIPAL DA ESCALA -->
+    <!-- TABELA PRINCIPAL DO MÊS DE REFERÊNCIA -->
     <div class="table-container">
       <table id="tabelaEscala">
         <thead>
           <tr>
-            <th colspan="6" class="header-mes" id="tituloMes">OUTUBRO 2026</th>
+            <th colspan="6" class="header-mes" id="tituloMes">OUTUBRO 2026 (MÊS REFERÊNCIA)</th>
           </tr>
           <tr>
             <th style="width: 45px;">OR</th>
             <th style="width: 55px;">DIA</th>
-            <th style="width: 280px;">PLANTÃO (3 Militares)</th>
-            <th style="width: 280px;">EQ A (3 Militares)</th>
-            <th style="width: 280px;">EQ B (3 Militares)</th>
-            <th style="width: 250px;">OBSERVAÇÕES</th>
+            <th style="width: 320px;">PLANTÃO (4 Militares)</th>
+            <th style="width: 320px;">EQ A (4 Militares)</th>
+            <th style="width: 320px;">EQ B (4 Militares)</th>
+            <th style="width: 230px;">OBSERVAÇÕES</th>
           </tr>
         </thead>
         <tbody id="corpoTabela">
         </tbody>
       </table>
     </div>
+
+    <!-- TABELA DO MÊS SUBSEQUENTE -->
+    <div class="table-container">
+      <table id="tabelaEscalaSubsequente">
+        <thead>
+          <tr>
+            <th colspan="6" class="header-mes-sub" id="tituloMesSubsequente">NOVEMBRO 2026 (MÊS SUBSEQUENTE)</th>
+          </tr>
+          <tr>
+            <th style="width: 45px;">OR</th>
+            <th style="width: 55px;">DIA</th>
+            <th style="width: 320px;">PLANTÃO (4 Militares)</th>
+            <th style="width: 320px;">EQ A (4 Militares)</th>
+            <th style="width: 320px;">EQ B (4 Militares)</th>
+            <th style="width: 230px;">OBSERVAÇÕES</th>
+          </tr>
+        </thead>
+        <tbody id="corpoTabelaSubsequente">
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </div>
 
@@ -824,6 +858,7 @@
   let efetivo = []; 
   let statusEfetivoMap = {}; 
   let dadosEscalaAtual = [];
+  let dadosEscalaSubsequente = [];
 
   const diasSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
   const mesesNome = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
@@ -930,9 +965,15 @@
     return options;
   }
 
-  function getChaveMes() {
-    const mes = document.getElementById('mes').value;
-    const ano = document.getElementById('ano').value;
+  function getChaveMes(mExtra = 0) {
+    let mes = parseInt(document.getElementById('mes').value) + mExtra;
+    let ano = parseInt(document.getElementById('ano').value);
+
+    if (mes > 11) {
+      mes = mes - 12;
+      ano += 1;
+    }
+
     return `escala_${ano}_${mes}`;
   }
 
@@ -969,7 +1010,6 @@
     efetivo.forEach(militar => {
       const stCustom = statusEfetivoMap[militar] || 'PRONTO';
 
-      // 1. PAINEL ADMINISTRATIVO
       let cssAdmin = '';
       let descAdmin = '';
 
@@ -997,7 +1037,6 @@
         </div>
       `;
 
-      // 2. PAINEL DE DESCANSO (MILITARES PRONTOS)
       if (stCustom === 'PRONTO') {
         let diasDesdeUltimoServico = -1;
 
@@ -1053,15 +1092,14 @@
   }
 
   function salvarAnotacoesMes() {
-    const chave = getChaveMes();
+    const chave = getChaveMes(0);
     const textoAnotacoes = document.getElementById('anotacoesMensaisText').value;
     database.ref('anotacoes_mes/' + chave).set(textoAnotacoes);
     notificarSalvamento('☁️ Anotação do mês salva!');
   }
 
-  function salvarDadosTabela() {
-    const chave = getChaveMes();
-    const linhas = document.querySelectorAll('#corpoTabela tr');
+  function extrairDadosTabela(selectorCorpo) {
+    const linhas = document.querySelectorAll(selectorCorpo + ' tr');
     const dadosEscala = [];
 
     linhas.forEach(row => {
@@ -1081,8 +1119,18 @@
       dadosEscala.push({ plantao, eqA, eqB, obs });
     });
 
-    dadosEscalaAtual = dadosEscala;
-    database.ref('escalas/' + chave).set(dadosEscala);
+    return dadosEscala;
+  }
+
+  function salvarDadosTabela() {
+    const chaveAtual = getChaveMes(0);
+    const chaveSub = getChaveMes(1);
+
+    dadosEscalaAtual = extrairDadosTabela('#corpoTabela');
+    dadosEscalaSubsequente = extrairDadosTabela('#corpoTabelaSubsequente');
+
+    database.ref('escalas/' + chaveAtual).set(dadosEscalaAtual);
+    database.ref('escalas/' + chaveSub).set(dadosEscalaSubsequente);
     
     validarConflitosEAtualizarStats();
     atualizarStatusEfetivo();
@@ -1162,7 +1210,7 @@
 
   function destacarMilitarNaTabela() {
     const nomeFiltro = document.getElementById('filtroMilitar').value;
-    const selects = document.querySelectorAll('#corpoTabela .select-nome');
+    const selects = document.querySelectorAll('.select-nome');
 
     selects.forEach(select => {
       if (nomeFiltro && select.value === nomeFiltro) {
@@ -1197,81 +1245,100 @@
     `;
   }
 
+  function renderizarTabelaMes(mesNum, anoNum, dadosEscala, elementCorpoId) {
+    const totalDias = new Date(anoNum, mesNum + 1, 0).getDate();
+    const corpo = document.getElementById(elementCorpoId);
+    corpo.innerHTML = '';
+
+    for (let dia = 1; dia <= totalDias; dia++) {
+      const dataObj = new Date(anoNum, mesNum, dia);
+      const diaSemanaNum = dataObj.getDay();
+      const diaSemanaTexto = diasSemana[diaSemanaNum];
+      const isFds = (diaSemanaNum === 0 || diaSemanaNum === 6);
+      
+      const cicloTomIndex = ((dia - 1) % 4) + 1;
+      const rowClass = `row-cinza-${cicloTomIndex}`;
+      const fdsClass = isFds ? 'cell-fds' : '';
+
+      const diaSalvo = dadosEscala[dia - 1] || { plantao: [{},{},{},{}], eqA: [{},{},{},{}], eqB: [{},{},{},{}], obs: '' };
+
+      const p = diaSalvo.plantao || [{},{},{},{}];
+      const eA = diaSalvo.eqA || [{},{},{},{}];
+      const eB = diaSalvo.eqB || [{},{},{},{}];
+
+      const tr = document.createElement('tr');
+      tr.className = rowClass;
+
+      tr.innerHTML = `
+        <td><strong>${dia}.</strong></td>
+        <td class="${fdsClass}"><strong>${diaSemanaTexto}</strong></td>
+        <td>
+          <div class="cell-group">
+            ${criarItemBoxHtml('cell-plantao', p[0])}
+            ${criarItemBoxHtml('cell-plantao', p[1])}
+            ${criarItemBoxHtml('cell-plantao', p[2])}
+            ${criarItemBoxHtml('cell-plantao', p[3])}
+          </div>
+        </td>
+        <td class="eq-a">
+          <div class="cell-group">
+            ${criarItemBoxHtml('cell-eqa', eA[0])}
+            ${criarItemBoxHtml('cell-eqa', eA[1])}
+            ${criarItemBoxHtml('cell-eqa', eA[2])}
+            ${criarItemBoxHtml('cell-eqa', eA[3])}
+          </div>
+        </td>
+        <td class="eq-b">
+          <div class="cell-group">
+            ${criarItemBoxHtml('cell-eqb', eB[0])}
+            ${criarItemBoxHtml('cell-eqb', eB[1])}
+            ${criarItemBoxHtml('cell-eqb', eB[2])}
+            ${criarItemBoxHtml('cell-eqb', eB[3])}
+          </div>
+        </td>
+        <td>
+          <textarea class="input-obs" onblur="salvarDadosTabela()">${diaSalvo.obs || ''}</textarea>
+        </td>
+      `;
+
+      corpo.appendChild(tr);
+    }
+  }
+
   function carregarEscala() {
-    const mes = parseInt(document.getElementById('mes').value);
-    const ano = parseInt(document.getElementById('ano').value);
+    let mes = parseInt(document.getElementById('mes').value);
+    let ano = parseInt(document.getElementById('ano').value);
+
+    let mesSub = mes + 1;
+    let anoSub = ano;
+    if (mesSub > 11) {
+      mesSub = 0;
+      anoSub += 1;
+    }
     
-    document.getElementById('tituloMes').innerText = `${mesesNome[mes]} ${ano}`;
+    document.getElementById('tituloMes').innerText = `${mesesNome[mes]} ${ano} (MÊS REFERÊNCIA)`;
+    document.getElementById('tituloMesSubsequente').innerText = `${mesesNome[mesSub]} ${anoSub} (MÊS SUBSEQUENTE)`;
     document.getElementById('tituloAnotacoesMes').innerText = `Anotações Gerais - ${mesesNome[mes]} / ${ano}`;
 
-    const totalDias = new Date(ano, mes + 1, 0).getDate();
-    const chave = getChaveMes();
+    const chaveAtual = getChaveMes(0);
+    const chaveSub = getChaveMes(1);
 
-    database.ref('anotacoes_mes/' + chave).once('value', (snapshot) => {
+    database.ref('anotacoes_mes/' + chaveAtual).once('value', (snapshot) => {
       document.getElementById('anotacoesMensaisText').value = snapshot.val() || '';
     });
 
-    database.ref('escalas/' + chave).off();
-    database.ref('escalas/' + chave).once('value', (snapshot) => {
+    database.ref('escalas/' + chaveAtual).once('value', (snapshot) => {
       dadosEscalaAtual = snapshot.val() || [];
-      const corpo = document.getElementById('corpoTabela');
-      corpo.innerHTML = '';
+      renderizarTabelaMes(mes, ano, dadosEscalaAtual, 'corpoTabela');
 
-      for (let dia = 1; dia <= totalDias; dia++) {
-        const dataObj = new Date(ano, mes, dia);
-        const diaSemanaNum = dataObj.getDay();
-        const diaSemanaTexto = diasSemana[diaSemanaNum];
-        const isFds = (diaSemanaNum === 0 || diaSemanaNum === 6);
-        
-        // Aplicação da Gradação de 4 tons bem distintos no Ciclo 24x72
-        const cicloTomIndex = ((dia - 1) % 4) + 1;
-        const rowClass = `row-cinza-${cicloTomIndex}`;
-        const fdsClass = isFds ? 'cell-fds' : '';
+      database.ref('escalas/' + chaveSub).once('value', (snapshotSub) => {
+        dadosEscalaSubsequente = snapshotSub.val() || [];
+        renderizarTabelaMes(mesSub, anoSub, dadosEscalaSubsequente, 'corpoTabelaSubsequente');
 
-        const diaSalvo = dadosEscalaAtual[dia - 1] || { plantao: [{},{},{}], eqA: [{},{},{}], eqB: [{},{},{}], obs: '' };
-
-        const p = diaSalvo.plantao || [{},{},{}];
-        const eA = diaSalvo.eqA || [{},{},{}];
-        const eB = diaSalvo.eqB || [{},{},{}];
-
-        const tr = document.createElement('tr');
-        tr.className = rowClass;
-
-        tr.innerHTML = `
-          <td><strong>${dia}.</strong></td>
-          <td class="${fdsClass}"><strong>${diaSemanaTexto}</strong></td>
-          <td>
-            <div class="cell-group">
-              ${criarItemBoxHtml('cell-plantao', p[0])}
-              ${criarItemBoxHtml('cell-plantao', p[1])}
-              ${criarItemBoxHtml('cell-plantao', p[2])}
-            </div>
-          </td>
-          <td class="eq-a">
-            <div class="cell-group">
-              ${criarItemBoxHtml('cell-eqa', eA[0])}
-              ${criarItemBoxHtml('cell-eqa', eA[1])}
-              ${criarItemBoxHtml('cell-eqa', eA[2])}
-            </div>
-          </td>
-          <td class="eq-b">
-            <div class="cell-group">
-              ${criarItemBoxHtml('cell-eqb', eB[0])}
-              ${criarItemBoxHtml('cell-eqb', eB[1])}
-              ${criarItemBoxHtml('cell-eqb', eB[2])}
-            </div>
-          </td>
-          <td>
-            <textarea class="input-obs" onblur="salvarDadosTabela()">${diaSalvo.obs || ''}</textarea>
-          </td>
-        `;
-
-        corpo.appendChild(tr);
-      }
-
-      validarConflitosEAtualizarStats();
-      atualizarStatusEfetivo();
-      destacarMilitarNaTabela();
+        validarConflitosEAtualizarStats();
+        atualizarStatusEfetivo();
+        destacarMilitarNaTabela();
+      });
     });
   }
 
@@ -1281,25 +1348,29 @@
       return;
     }
 
-    const linhas = document.querySelectorAll('#corpoTabela tr');
-    linhas.forEach((row, index) => {
-      const p1Select = row.querySelector('.cell-plantao .select-nome');
-      const militarIndex = index % efetivo.length;
-      if (efetivo[militarIndex]) {
-        p1Select.value = efetivo[militarIndex];
-      }
-    });
+    const preencherCorpo = (selectorCorpo) => {
+      const linhas = document.querySelectorAll(selectorCorpo + ' tr');
+      linhas.forEach((row, index) => {
+        const p1Select = row.querySelector('.cell-plantao .select-nome');
+        const militarIndex = index % efetivo.length;
+        if (efetivo[militarIndex]) {
+          p1Select.value = efetivo[militarIndex];
+        }
+      });
+    };
 
+    preencherCorpo('#corpoTabela');
+    preencherCorpo('#corpoTabelaSubsequente');
     salvarDadosTabela();
   }
 
   function exportarExcel() {
-    const mes = parseInt(document.getElementById('mes').value);
-    const ano = parseInt(document.getElementById('ano').value);
+    let mes = parseInt(document.getElementById('mes').value);
+    let ano = parseInt(document.getElementById('ano').value);
     const nomeMes = mesesNome[mes];
 
     let csvContent = `ESCALA DE SERVIÇO - ALI/BPMCHOQUE - ${nomeMes} / ${ano}\n\n`;
-    csvContent += `DIA;DIA DA SEMANA;PLANTAO 1;TIPO;PLANTAO 2;TIPO;PLANTAO 3;TIPO;EQ A 1;TIPO;EQ A 2;TIPO;EQ A 3;TIPO;EQ B 1;TIPO;EQ B 2;TIPO;EQ B 3;TIPO;OBSERVACOES\n`;
+    csvContent += `DIA;DIA DA SEMANA;PLANTAO 1;TIPO;PLANTAO 2;TIPO;PLANTAO 3;TIPO;PLANTAO 4;TIPO;EQ A 1;TIPO;EQ A 2;TIPO;EQ A 3;TIPO;EQ A 4;TIPO;EQ B 1;TIPO;EQ B 2;TIPO;EQ B 3;TIPO;EQ B 4;TIPO;OBSERVACOES\n`;
 
     const linhas = document.querySelectorAll('#corpoTabela tr');
     linhas.forEach((row, idx) => {
@@ -1321,18 +1392,21 @@
       const p1 = getValueAndTipo(plantaoBox, 0);
       const p2 = getValueAndTipo(plantaoBox, 1);
       const p3 = getValueAndTipo(plantaoBox, 2);
+      const p4 = getValueAndTipo(plantaoBox, 3);
 
       const eA1 = getValueAndTipo(eABox, 0);
       const eA2 = getValueAndTipo(eABox, 1);
       const eA3 = getValueAndTipo(eABox, 2);
+      const eA4 = getValueAndTipo(eABox, 3);
 
       const eB1 = getValueAndTipo(eBBox, 0);
       const eB2 = getValueAndTipo(eBBox, 1);
       const eB3 = getValueAndTipo(eBBox, 2);
+      const eB4 = getValueAndTipo(eBBox, 3);
 
       const obs = (row.querySelector('.input-obs').value || '').replace(/\n/g, ' ');
 
-      csvContent += `${dia};${diaSemana};${p1};${p2};${p3};${eA1};${eA2};${eA3};${eB1};${eB2};${eB3};"${obs}"\n`;
+      csvContent += `${dia};${diaSemana};${p1};${p2};${p3};${p4};${eA1};${eA2};${eA3};${eA4};${eB1};${eB2};${eB3};${eB4};"${obs}"\n`;
     });
 
     const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
